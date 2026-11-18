@@ -1214,3 +1214,6 @@ body { background: linear-gradient(180deg, #cdeae7 0, #e3efe9 380px, var(--bg) 6
 .ps-call strong { font-size: clamp(28px, 6.4vw, 56px) !important; }
 .ps-qr-img { width: clamp(80px, 17vw, 140px) !important; }
 .ps-foot { padding: 2% 3% !important; }
+/* แก้: รูปในโปสเตอร์ต้องอยู่ในกรอบเสมอ (เดิมรูปสูงเกินกรอบเลยโดนตัดล่าง) */
+.ps-photo { min-height: 0; }
+.ps-photo .ps-fg { position: absolute !important; inset: 0; width: 100%; height: 100%; }
