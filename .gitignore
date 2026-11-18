@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+.env*.local
+.DS_Store
+*.log
+
+# ไฟล์รหัสผ่านส่วนตัว ห้ามขึ้น GitHub
+password*.txt
+*.secret
+
+# ไฟล์ชั่วคราว ไม่ต้องขึ้นเว็บ
+sample-photos.zip
+/samples/
+app/globals.backup-v2.css

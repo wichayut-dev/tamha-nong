@@ -1,0 +1,20 @@
+{
+  "name": "tamha-nong-phuket",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "dev:https": "next dev -H 0.0.0.0 --experimental-https"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "leaflet": "1.9.4",
+    "next": "15.5.28",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-leaflet": "^5.0.0"
+  }
+}
