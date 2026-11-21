@@ -1218,14 +1218,28 @@ body { background: linear-gradient(180deg, #cdeae7 0, #e3efe9 380px, var(--bg) 6
 .ps-photo { min-height: 0; }
 .ps-photo .ps-fg { position: absolute !important; inset: 0; width: 100%; height: 100%; }
 
-/* ===== v12: ปุ่มเลือกภาษา ===== */
-.lang-sel { position: relative; display: inline-flex; align-items: center; gap: 6px; height: 42px; padding: 0 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); margin-left: auto; flex: none; }
-.lang-sel:hover, .lang-sel:focus-within { border-color: var(--sea); }
-.lang-sel svg { color: var(--muted); flex: none; }
-.lang-sel select { appearance: none; -webkit-appearance: none; border: 0; background: transparent; color: inherit; font: inherit; font-size: 14px; font-weight: 500; padding: 0 2px; cursor: pointer; outline: none; max-width: 92px; }
-.nav + .lang-sel { margin-left: 6px; }
-.lang-sel + .bell-wrap { margin-left: 8px !important; }
-@media (max-width: 420px) { .lang-sel { padding: 0 8px; gap: 4px; } .lang-sel select { font-size: 13px; max-width: 72px; } }
+/* ===== v12: ปุ่มเลือกภาษา (ปุ่ม + เมนูของเราเอง) ===== */
+.lang-wrap { position: relative; margin-left: auto; flex: none; }
+.nav + .lang-wrap { margin-left: 6px; }
+.lang-wrap + .bell-wrap { margin-left: 8px !important; }
+.lang-btn { display: inline-flex; align-items: center; gap: 6px; height: 42px; padding: 0 10px 0 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .12s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease; box-shadow: 0 1px 0 rgba(0,0,0,.04); }
+.lang-btn:hover { border-color: var(--sea); background: var(--surface2); }
+.lang-btn:active { transform: scale(.95); box-shadow: inset 0 1px 3px rgba(0,0,0,.12); }
+.lang-btn.is-open { border-color: var(--sea); background: var(--surface2); }
+.lang-btn:focus { outline: none; }
+.lang-btn:focus-visible { outline: 2px solid var(--sea); outline-offset: 2px; }
+.lang-btn > svg:first-child { color: var(--muted); }
+.lang-cur { min-width: 1.6em; text-align: left; }
+.lang-caret { color: var(--muted); transition: transform .18s ease; }
+.lang-btn.is-open .lang-caret { transform: rotate(180deg); }
+.lang-menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 168px; padding: 6px; display: grid; gap: 2px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); z-index: 1200; transform-origin: top right; animation: lang-pop .14s ease-out; }
+@keyframes lang-pop { from { opacity: 0; transform: translateY(-4px) scale(.97); } to { opacity: 1; transform: none; } }
+.lang-opt { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 10px 12px; border: 0; border-radius: 10px; background: transparent; color: var(--ink); font: inherit; font-size: 15px; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .12s ease, transform .1s ease; }
+.lang-opt:hover, .lang-opt:focus-visible { background: var(--surface2); outline: none; }
+.lang-opt:active { transform: scale(.98); background: var(--line); }
+.lang-opt[aria-selected="true"] { font-weight: 600; color: var(--sea); }
+@media (prefers-reduced-motion: reduce) { .lang-menu { animation: none; } .lang-btn, .lang-opt, .lang-caret { transition: none; } }
+@media (max-width: 420px) { .lang-btn { padding: 0 8px; gap: 4px; } }
 /* หัวข้อใหญ่ในภาษาที่คำยาว ให้ตัดบรรทัดได้ */
 .hs h1.hs-h1-ru span, .hs h1.hs-h1-en span { white-space: normal !important; }
 .hs h1.hs-h1-ru { font-size: clamp(36px, 4vw, 64px) !important; }
