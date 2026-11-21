@@ -2,14 +2,11 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import PetCard from "@/components/PetCard";
-import HeroShow from "@/components/HeroShow";
 import dynamic from "next/dynamic";
 const HeroMap = dynamic(() => import("@/components/HeroMap"), { ssr: false, loading: () => <div className="hm-map skeleton" /> });
-import { PetPhoto } from "@/components/PetAvatar";
-import TimeAgo from "@/components/TimeAgo";
 import SetupNotice from "@/components/SetupNotice";
 import { isConfigured, listPosts, subscribePosts } from "@/lib/supabase";
-import { FUR, areaName, furName } from "@/lib/data";
+import { FUR, areaName, furName, isSample } from "@/lib/data";
 import { t } from "@/lib/i18n";
 
 export default function FeedPage() {
@@ -32,17 +29,17 @@ export default function FeedPage() {
     return () => { off(); window.removeEventListener("focus", onFocus); };
   }, [load]);
 
+  // นับเฉพาะประกาศจริง (ไม่นับประกาศตัวอย่าง)
   const counts = useMemo(() => {
-    const c = { lost: 0, found: 0, home: 0 };
-    (posts ?? []).forEach((p) => { c[p.status] = (c[p.status] ?? 0) + 1; });
+    const c = { lost: 0, found: 0, home: 0, real: 0 };
+    const all = { lost: 0, found: 0, home: 0 };
+    (posts ?? []).forEach((p) => {
+      all[p.status] = (all[p.status] ?? 0) + 1;
+      if (isSample(p)) return;
+      c.real++; c[p.status] = (c[p.status] ?? 0) + 1;
+    });
+    c.all = all;
     return c;
-  }, [posts]);
-
-  // รูปบนแบนเนอร์: ประกาศล่าสุดที่มีรูป (ถ้าไม่มีรูปเลย ใช้ประกาศล่าสุด)
-  const featured = useMemo(() => {
-    const list = (posts ?? []).filter((p) => p.status !== "home");
-    const withPhoto = list.filter((p) => p.photo_url);
-    return (withPhoto.length >= 3 ? withPhoto : list).slice(0, 3);
   }, [posts]);
 
   const shown = useMemo(() => {
@@ -64,42 +61,48 @@ export default function FeedPage() {
 
   return (
     <>
-      {posts && posts.length > 0 && <HeroShow posts={posts} />}
-
-      <section className="hero">
-        <aside className="hero-feed" aria-label={t("feed_aria")}>
-          <div className="hf-head">
-            <span className="hf-live"><i />{t("map_teaser")}</span>
-            <Link href="/map" className="hf-map">{t("open_full_map")}</Link>
+      <section className="hb">
+        <div className="hb-main">
+          <h1 className="hb-title">{t("hb_title")}</h1>
+          <p className="hb-stat">
+            {!posts ? t("loading") : counts.real
+              ? t("hb_stat", { lost: counts.lost, found: counts.found, home: counts.home })
+              : t("hb_none_real")}
+          </p>
+          <div className="hb-actions">
+            <Link href="/new?type=lost" className="hb-act lost">
+              <b>{t("cta_lost")}</b><span>{t("hb_lost_d")}</span><i aria-hidden="true">→</i>
+            </Link>
+            <Link href="/new?type=found" className="hb-act found">
+              <b>{t("cta_found")}</b><span>{t("hb_found_d")}</span><i aria-hidden="true">→</i>
+            </Link>
           </div>
-          <div className="hf-mapwrap">
-            <HeroMap posts={posts} />
-            <div className="hf-legend"><span><i className="lost" />{t("status.lost")}</span><span><i className="found" />{t("status.found")}</span><span><i className="ring" />{t("legend_new")}</span></div>
+          <div className="search hb-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--muted)", flex: "none" }}><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
+            <input id="q" type="search" placeholder={t("search_ph")} value={q} onChange={(e) => setQ(e.target.value)} aria-label={t("search_aria")} />
           </div>
-          <div className="hf-foot">
-            <div><b>{posts ? counts.lost : "–"}</b><span>{t("count_lost")}</span></div>
-            <div><b>{posts ? counts.found : "–"}</b><span>{t("status.found")}</span></div>
-            <div><b>{posts ? counts.home : "–"}</b><span>{t("status.home")}</span></div>
+        </div>
+        <aside className="hb-map" aria-label={t("feed_aria")}>
+          <div className="hb-map-head">
+            <span>{t("map_teaser")}</span>
+            <Link href="/map">{t("open_full_map")}</Link>
           </div>
+          <HeroMap posts={posts} />
+          <div className="hb-legend"><span><i className="lost" />{t("status.lost")}</span><span><i className="found" />{t("status.found")}</span><span><i className="ring" />{t("legend_new")}</span></div>
         </aside>
       </section>
 
-      
       <div className="section-title">
         <h2>{t("latest")}</h2>
         <span className="live"><i />{t("auto_update")}</span>
       </div>
 
       <div className="toolbar">
-        <div className="search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--muted)", flex: "none" }}><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-          <input id="q" type="search" placeholder={t("search_ph")} value={q} onChange={(e) => setQ(e.target.value)} aria-label={t("search_aria")} />
-        </div>
         <div className="chips">
           {chip("all", status, setStatus, t("all"))}
-          {chip("lost", status, setStatus, `${t("status.lost")}${posts ? " " + counts.lost : ""}`)}
-          {chip("found", status, setStatus, `${t("status.found")}${posts ? " " + counts.found : ""}`)}
-          {chip("home", status, setStatus, `${t("status.home")}${posts ? " " + counts.home : ""}`)}
+          {chip("lost", status, setStatus, `${t("status.lost")}${posts ? " " + counts.all.lost : ""}`)}
+          {chip("found", status, setStatus, `${t("status.found")}${posts ? " " + counts.all.found : ""}`)}
+          {chip("home", status, setStatus, `${t("status.home")}${posts ? " " + counts.all.home : ""}`)}
           <span className="divider" />
           {chip("all", species, setSpecies, t("all_species"))}
           {chip("dog", species, setSpecies, t("species.dog"))}
