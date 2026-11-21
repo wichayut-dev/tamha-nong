@@ -1253,3 +1253,65 @@ body { background: linear-gradient(180deg, #cdeae7 0, #e3efe9 380px, var(--bg) 6
 .logo-mark .lm-door { fill: #fff6ea; stroke: #fff6ea; }
 .brand:hover .logo-mark { transform: translateY(-1px) !important; }
 .brand:hover .logo-mark .lm-win { fill: #ffe08f; }
+
+/* ================================================================
+   v14 — หน้าแรกแบบ "บอร์ดประกาศชุมชน": พื้นเรียบ ใบประกาศกระดาษ เทปกาว รอยปรุเบอร์โทร
+   ================================================================ */
+:root { --bg:#eceeeb; --surface:#ffffff; --surface2:#f3f5f2; --line:#d6dcd8; --ink:#14262c; --muted:#56686d;
+  --paper:#fffefb; --paper-ink:#1c2326; --paper-muted:#5b6266; --tape:rgba(246,226,150,.78); }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#101618; --surface:#172124; --surface2:#1d2a2e; --line:#2a383c; --ink:#e7eff0; --muted:#9db0b4;
+    --paper:#f4f1ea; --paper-ink:#1c2326; --paper-muted:#585f62; --tape:rgba(214,196,120,.7); }
+}
+body { background: var(--bg) !important; }
+.top { background: var(--surface) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border-bottom: 1px solid var(--line) !important; }
+
+.hb { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 20px; margin: 22px 0 30px; align-items: stretch; }
+.hb-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.hb-title { margin: 0; font-family: var(--font-display), sans-serif; font-weight: 500; font-size: clamp(28px, 3.3vw, 40px); line-height: 1.15; color: var(--ink); text-wrap: balance; }
+.hb-stat { margin: 0; padding-left: 12px; border-left: 3px solid var(--accent); color: var(--muted); font-size: 15px; line-height: 1.5; }
+.hb-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hb-act { position: relative; display: grid; gap: 4px; padding: 16px 40px 16px 16px; background: var(--surface); border: 2px solid var(--line); border-radius: 8px; color: var(--ink); text-decoration: none; transition: border-color .15s, background .15s, transform .1s; }
+.hb-act b { font-family: var(--font-display), sans-serif; font-weight: 500; font-size: 20px; line-height: 1.2; }
+.hb-act span { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+.hb-act i { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-style: normal; font-size: 20px; }
+.hb-act.lost { border-color: var(--lost); } .hb-act.lost b, .hb-act.lost i { color: var(--lost); }
+.hb-act.found { border-color: var(--found); } .hb-act.found b, .hb-act.found i { color: var(--found); }
+.hb-act.lost:hover { background: var(--lost-soft); } .hb-act.found:hover { background: var(--found-soft); }
+.hb-act:active { transform: scale(.985); }
+.hb-search { margin-top: auto; }
+.hb-map { display: flex; flex-direction: column; gap: 10px; padding: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; min-width: 0; }
+.hb-map-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; font-weight: 600; }
+.hb-map-head a { font-weight: 500; color: var(--accent); white-space: nowrap; }
+.hb-map .hm-map { height: 270px !important; border-radius: 6px; overflow: hidden; }
+.hb-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); }
+.hb-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.hb-legend i.lost { background: var(--lost); } .hb-legend i.found { background: var(--found); }
+.hb-legend i.ring { border: 2px solid var(--accent); }
+@media (max-width: 860px) { .hb { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .hb-actions { grid-template-columns: 1fr; } }
+
+/* ใบประกาศ */
+.grid:has(.flyer) { gap: 30px 22px; padding-top: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.flyer { position: relative; display: flex; flex-direction: column; background: var(--paper); color: var(--paper-ink); border-radius: 2px; text-decoration: none;
+  box-shadow: 0 1px 1px rgba(0,0,0,.12), 0 8px 18px -6px rgba(0,0,0,.18); transform: rotate(var(--tilt, 0deg)); transition: transform .18s ease, box-shadow .18s ease; }
+.flyer:hover { transform: rotate(0deg) translateY(-3px); box-shadow: 0 2px 2px rgba(0,0,0,.12), 0 14px 26px -8px rgba(0,0,0,.25); }
+.fl-tape { position: absolute; top: -10px; left: 50%; width: 74px; height: 22px; transform: translateX(-50%) rotate(-3deg); background: var(--tape); box-shadow: 0 1px 1px rgba(0,0,0,.06); z-index: 2; }
+.fl-band { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 10px 7px; color: #fff; font-family: var(--font-display), sans-serif; font-weight: 500; font-size: 22px; letter-spacing: .04em; line-height: 1; }
+.flyer.lost .fl-band { background: #cf3a3f; } .flyer.found .fl-band { background: #1d8a5c; } .flyer.home .fl-band { background: #2d66c7; }
+.fl-sample { font-family: var(--font-body), sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0; padding: 2px 7px; border: 1px solid rgba(255,255,255,.75); border-radius: 3px; }
+.fl-photo { position: relative; aspect-ratio: 4 / 3; margin: 10px 10px 0; background: #efeee9; display: grid; place-items: center; overflow: hidden; }
+.fl-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fl-photo img.cut { object-fit: contain; background: #f4f3ef; }
+.fl-seen { position: absolute; left: 8px; bottom: 8px; font-size: 12px; font-weight: 600; background: #fff; color: #9a5a00; padding: 3px 8px; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+.fl-body { display: grid; gap: 4px; padding: 10px 12px 12px; }
+.fl-body h3 { margin: 0; font-family: var(--font-display), sans-serif; font-weight: 500; font-size: 20px; line-height: 1.2; color: var(--paper-ink); }
+.fl-meta { font-size: 13px; color: var(--paper-muted); }
+.fl-meta b { color: var(--paper-ink); font-weight: 600; }
+.fl-desc { margin: 2px 0 0; font-size: 14px; line-height: 1.5; color: #333a3d; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.fl-reward { font-size: 14px; font-weight: 700; color: #b42b30; }
+.fl-tear { margin-top: auto; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1.5px dashed #b9bcb9; }
+.fl-tear span { padding: 7px 4px 8px; font-size: 11px; font-variant-numeric: tabular-nums; color: #4b5154; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px dashed #c9ccc9; }
+.fl-tear span:last-child { border-right: 0; }
+.flyer:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .flyer { transition: none; } .flyer:hover { transform: rotate(var(--tilt, 0deg)); } }
