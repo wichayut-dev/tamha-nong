@@ -10,7 +10,7 @@
 
 | ลงประกาศ | แผนที่ | โปสเตอร์ QR |
 |---|---|---|
-| ![ลงประกาศ](docs/new-post.jpg) | ![แผนที่](docs/map.jpg) | ![โปสเตอร์](docs/poster.jpg) |
+| ![ลงประกาศ](docs/new-post-v2.jpg) | ![แผนที่](docs/map-v2.jpg) | ![โปสเตอร์](docs/poster-v2.jpg) |
 
 ## ทำอะไรได้
 
