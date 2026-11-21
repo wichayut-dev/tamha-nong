@@ -7,7 +7,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.supabase.co https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com",
   "font-src 'self' data:",
-  `connect-src 'self' ${supa} https://cdn.jsdelivr.net https://unpkg.com${isProd ? "" : " ws: wss: http: https:"}`,
+  `connect-src 'self' ${supa} https://cdn.jsdelivr.net https://unpkg.com https://api.mymemory.translated.net${isProd ? "" : " ws: wss: http: https:"}`,
   "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",

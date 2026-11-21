@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
+import Tr from "@/components/Tr";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -9,7 +10,7 @@ import WhenPicker, { toLocalInput } from "@/components/WhenPicker";
 import SetupNotice from "@/components/SetupNotice";
 import { useToast } from "@/components/Toast";
 import { addSighting, deletePost, getPost, isConfigured, markHome, reportPost, subscribePosts, uploadPhoto } from "@/lib/supabase";
-import { AREAS, STATUS, areaName, eventAt, eventVerb, furName, fullDateTime, isSample, seenAt, getToken, gmapsAreaUrl, gmapsUrl, nearestArea, petTitle, safePhoto, speciesName } from "@/lib/data";
+import { AREAS, STATUS, areaName, eventAt, eventVerb, furName, fullDateTime, isSample, cleanDesc, seenAt, getToken, gmapsAreaUrl, gmapsUrl, nearestArea, petTitle, safePhoto, speciesName } from "@/lib/data";
 import { t } from "@/lib/i18n";
 import TimeAgo from "@/components/TimeAgo";
 
@@ -126,7 +127,7 @@ export default function PostPage() {
 
         <div style={{ display: "grid", gap: 16, minWidth: 0 }}>
           <div>
-            <h2 className="dname">{petTitle(post)}</h2>
+            <h2 className="dname"><Tr>{petTitle(post)}</Tr></h2>
             {isSample(post) && <p className="sample-note">{t("sample_note")}</p>}
             <div className={`when-line big ${post.status}`}>{eventVerb(post)} <TimeAgo iso={eventAt(post)} clock /> · {areaName(post.area)}</div>
           </div>
@@ -179,7 +180,7 @@ export default function PostPage() {
             </div>
           )}
 
-          <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{post.description}</p>
+          <p style={{ margin: 0, whiteSpace: "pre-wrap" }}><Tr>{cleanDesc(post)}</Tr></p>
 
           <section className="panel">
             <dl className="facts">
@@ -188,7 +189,7 @@ export default function PostPage() {
               <dt>{t("f_area")}</dt><dd>{areaName(post.area)}</dd>
               {eventVerb(post) && <><dt>{t(post.status === "found" ? "f_when_found" : "f_when_lost")}</dt><dd>{fullDateTime(eventAt(post))}</dd></>}
               <dt>{t("f_posted")}</dt><dd>{fullDateTime(post.created_at)}</dd>
-              {post.reward && <><dt>{t("f_reward")}</dt><dd style={{ color: "var(--lost)" }}>{post.reward}</dd></>}
+              {post.reward && <><dt>{t("f_reward")}</dt><dd style={{ color: "var(--lost)" }}><Tr>{post.reward}</Tr></dd></>}
             </dl>
             <a className="btn gmaps" href={gmapsUrl(post.lat, post.lng)} target="_blank" rel="noopener noreferrer">
               <GmapsIcon /> {t(post.status === "found" ? "nav_to_found" : "nav_to_lost")}
@@ -236,7 +237,7 @@ export default function PostPage() {
               {sightings.length ? sightings.map((s) => (
                 <div className="sight" key={s.id}>
                   <div>
-                    {s.note || t("reported_seen")}
+                    {s.note ? <Tr>{s.note}</Tr> : t("reported_seen")}
                     <div className="meta">
                       {t("seen_prefix")} <TimeAgo iso={seenAt(s)} clock /> · {areaName(s.area)} ·{" "}
                       <a href={s.lat ? gmapsUrl(s.lat, s.lng) : gmapsAreaUrl(s.area)} target="_blank" rel="noopener noreferrer" className="inline-link">{s.lat ? t("nav_to_seen") : t("navigate")}</a>

@@ -1,5 +1,6 @@
 "use client";
 import "leaflet/dist/leaflet.css";
+import Tr from "./Tr";
 import L from "leaflet";
 import Link from "next/link";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -31,7 +32,7 @@ export default function MapView({ posts }) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={safePhoto(p.photo_url)} alt="" />
               )}
-              <strong>{petTitle(p)} · {STATUS[p.status]}</strong>
+              <strong><Tr>{petTitle(p)}</Tr> · {STATUS[p.status]}</strong>
               <span>{areaName(p.area)}</span>
               <Link href={`/p/${p.id}`}>{t("view_post")}</Link>
               <a href={gmapsUrl(p.lat, p.lng)} target="_blank" rel="noopener noreferrer">{t("nav_gmaps")}</a>

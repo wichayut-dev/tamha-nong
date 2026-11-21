@@ -1,10 +1,11 @@
 "use client";
 // โปสเตอร์ A4 พร้อม QR Code สำหรับพิมพ์ไปติดตามเสาไฟ/ร้านค้า
 import { useEffect, useRef, useState } from "react";
+import Tr from "@/components/Tr";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { getPost } from "@/lib/supabase";
-import { areaName, eventAt, fullDateTime, petTitle, safePhoto, speciesName } from "@/lib/data";
+import { areaName, cleanDesc, eventAt, fullDateTime, petTitle, safePhoto, speciesName } from "@/lib/data";
 import { t } from "@/lib/i18n";
 
 function loadQr() {
@@ -89,13 +90,13 @@ export default function Poster() {
           ) : <span>{t("no_photo")}</span>}
         </div>
         <div className="ps-body">
-          <h2>{petTitle(p)}</h2>
+          <h2><Tr>{petTitle(p)}</Tr></h2>
           <ul>
             <li><b>{t(lost ? "ps_where_lost" : "ps_where_found")}</b> {areaName(p.area)}</li>
             <li><b>{t("ps_when")}</b> {fullDateTime(eventAt(p))}</li>
-            {p.description && <li className="ps-desc">{p.description}</li>}
+            {p.description && <li className="ps-desc"><Tr>{cleanDesc(p)}</Tr></li>}
           </ul>
-          {p.reward && lost && <div className="ps-reward">{t("ps_reward", { r: p.reward })}</div>}
+          {p.reward && lost && <div className="ps-reward">{t("ps_reward", { r: "" }).trim()} <Tr>{p.reward}</Tr></div>}
         </div>
         <footer className="ps-foot">
           <div className="ps-call">

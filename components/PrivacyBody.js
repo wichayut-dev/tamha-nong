@@ -22,6 +22,7 @@ const C = {
       ["3. ใครเห็นข้อมูลของคุณ", null, [
         ["!ทุกคนที่เปิดเว็บจะเห็นข้อมูลในประกาศ รวมถึงเบอร์โทร", " เพราะเป็นช่องทางให้คนติดต่อคุณ กรุณาอย่าใส่ข้อมูลที่ไม่อยากเปิดเผย เช่น บ้านเลขที่ ไม่จำเป็นต้องปักหมุดที่บ้านของคุณ ปักแค่จุดที่สัตว์หายก็พอ"],
         "ผู้ดูแลระบบเห็นรายงานประกาศไม่เหมาะสม และแก้ไขหรือซ่อนประกาศได้ ข้อมูลเก็บบน Supabase (ศูนย์ข้อมูลสิงคโปร์) แผนที่ใช้ OpenStreetMap",
+        "เมื่อเลือกภาษาอื่นที่ไม่ใช่ไทย ข้อความในประกาศ (ชื่อน้อง ลักษณะ ค่าตอบแทน ข้อความแจ้งเห็น) จะถูกส่งไปแปลอัตโนมัติผ่านบริการ MyMemory โดยไม่ส่งเบอร์โทรหรือชื่อผู้ติดต่อ",
       ]],
       ["4. เก็บนานแค่ไหน", null, ["ประกาศที่เกิน 60 วันจะไม่แสดงในหน้าเว็บอัตโนมัติ เจ้าของลบประกาศได้ตลอดเวลาจากเบราว์เซอร์ที่ใช้ลงประกาศ และเราจะลบข้อมูลถาวรเมื่อได้รับคำขอ"]],
       ["5. สิทธิของคุณ", null, [
@@ -49,6 +50,7 @@ const C = {
       ["3. Who can see your data", null, [
         ["!Everyone who visits the site can see the details in a post, including the phone number,", " because that is how people contact you. Please don't include anything you don't want public, such as your house number. You don't need to pin your home; the spot where the pet went missing is enough."],
         "Admins can see reports about inappropriate posts and can edit or hide posts. Data is stored on Supabase (Singapore data centre). Maps use OpenStreetMap.",
+        "When you choose a language other than Thai, post text (pet name, description, reward, sighting notes) is sent to the MyMemory service for automatic translation. Phone numbers and contact names are not sent.",
       ]],
       ["4. How long we keep it", null, ["Posts older than 60 days are hidden from the site automatically. Owners can delete their post at any time from the browser they posted with, and we permanently delete data on request."]],
       ["5. Your rights", null, [
@@ -76,6 +78,7 @@ const C = {
       ["3. 谁能看到你的信息", null, [
         ["!所有访问网站的人都能看到启事中的信息，包括电话号码，", "因为这是别人联系你的方式。请不要填写不想公开的信息，例如门牌号。不需要标记你家，只需标记宠物走失的地点。"],
         "管理员可以查看不当启事的举报，并可编辑或隐藏启事。数据存储在 Supabase（新加坡数据中心），地图使用 OpenStreetMap。",
+        "选择泰语以外的语言时，启事中的文字（宠物名字、特征、酬谢、目击留言）会发送到 MyMemory 服务进行自动翻译，不会发送电话号码或联系人姓名。",
       ]],
       ["4. 保存多久", null, ["超过 60 天的启事会自动从网站隐藏。主人可随时在发布时使用的浏览器中删除启事，收到请求后我们也会永久删除数据。"]],
       ["5. 你的权利", null, [
@@ -103,6 +106,7 @@ const C = {
       ["3. Кто видит ваши данные", null, [
         ["!Все посетители сайта видят данные объявления, включая номер телефона,", " потому что так с вами смогут связаться. Не указывайте то, что не хотите раскрывать, например номер дома. Не нужно отмечать свой дом — достаточно места, где пропал питомец."],
         "Администраторы видят жалобы на объявления и могут редактировать или скрывать их. Данные хранятся в Supabase (дата-центр в Сингапуре), карты — OpenStreetMap.",
+        "Если выбран не тайский язык, текст объявлений (кличка, приметы, вознаграждение, сообщения «видели») отправляется в сервис MyMemory для автоматического перевода. Телефоны и имена для связи не отправляются.",
       ]],
       ["4. Как долго мы храним данные", null, ["Объявления старше 60 дней автоматически скрываются с сайта. Владелец может удалить объявление в любое время из браузера, с которого его подал, а по запросу мы удаляем данные навсегда."]],
       ["5. Ваши права", null, [
