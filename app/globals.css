@@ -1320,3 +1320,13 @@ body { background: var(--bg) !important; }
 .fl-photo img { position: absolute; inset: 0; width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: 50% 50% !important; background: #f4f3ef; }
 .fl-photo { background: #f4f3ef; }
 .fl-photo, .fl-photo img { background: #fff !important; }
+
+/* v15: การ์ดแจ้งเตือนเข้ามือถือ (เฉพาะคนลงประกาศ) */
+.push-card { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.push-card .push-ico { flex: none; color: var(--sea); }
+.push-card .push-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 220px; }
+.push-card .push-text strong { font-size: 15px; }
+.push-card .push-text span { font-size: 13px; color: var(--muted); line-height: 1.45; }
+.push-card.on { border-color: var(--home); background: var(--home-soft); }
+.push-card.on .push-ico { color: var(--home); }
+.push-card.err .push-text span, .push-card.denied .push-text span { color: var(--lost); }
