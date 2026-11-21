@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import Link from "next/link";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { t } from "@/lib/i18n";
 import { PHUKET_CENTER, STATUS, areaName, gmapsUrl, petTitle, safePhoto } from "@/lib/data";
 
 const COLORS = { lost: "#e0475a", found: "#1f9468", home: "#2f6fd6" };
@@ -32,8 +33,8 @@ export default function MapView({ posts }) {
               )}
               <strong>{petTitle(p)} · {STATUS[p.status]}</strong>
               <span>{areaName(p.area)}</span>
-              <Link href={`/p/${p.id}`}>ดูประกาศ →</Link>
-              <a href={gmapsUrl(p.lat, p.lng)} target="_blank" rel="noopener noreferrer">นำทางด้วย Google Maps ↗</a>
+              <Link href={`/p/${p.id}`}>{t("view_post")}</Link>
+              <a href={gmapsUrl(p.lat, p.lng)} target="_blank" rel="noopener noreferrer">{t("nav_gmaps")}</a>
             </div>
           </Popup>
         </Marker>

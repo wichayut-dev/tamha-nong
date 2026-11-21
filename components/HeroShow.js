@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { PetPhoto } from "./PetAvatar";
 import TimeAgo from "./TimeAgo";
 import { STATUS, areaName, eventAt, eventVerb, isSample, petTitle } from "@/lib/data";
+import { getLang, t } from "@/lib/i18n";
 
 const SPEED = 5000;
 
@@ -43,20 +44,20 @@ export default function HeroShow({ posts }) {
   const thumbs = n > 1 ? [1, 2].map((d) => (i + d) % n).filter((k, idx, a) => k !== i && a.indexOf(k) === idx) : [];
 
   return (
-    <section className={`hs${running ? " is-run" : ""}`} aria-roledescription="carousel" aria-label="น้องที่รอกลับบ้าน"
+    <section className={`hs${running ? " is-run" : ""}`} aria-roledescription="carousel" aria-label={t("hero_aria")}
       ref={secRef} onMouseMove={onMove}
       onMouseEnter={() => setHover(true)} onMouseLeave={(e) => { setHover(false); e.currentTarget.style.setProperty("--mx", 0); e.currentTarget.style.setProperty("--my", 0); }}
       onTouchStart={(e) => (touch.current = e.touches[0].clientX)}
       onTouchEnd={(e) => { const s = touch.current; touch.current = null; if (s == null) return; const dx = e.changedTouches[0].clientX - s; if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1)); }}>
 
       <div className="hs-copy">
-        <h1><span style={{ whiteSpace: "nowrap" }}>หมาแมวหาย</span><br /><span style={{ whiteSpace: "nowrap" }}>ในภูเก็ต?</span></h1>
-        <p className="hs-lead">ลงประกาศครั้งเดียว<br />ให้คนทั้งภูเก็ตช่วยกันตามหา</p>
+        <h1 className={`hs-h1-${getLang()}`}><span style={{ whiteSpace: "nowrap" }}>{t("hero_h1a")}</span><br /><span style={{ whiteSpace: "nowrap" }}>{t("hero_h1b")}</span></h1>
+        <p className="hs-lead">{t("hero_lead1")}<br />{t("hero_lead2")}</p>
         {p && (
           <Link href={`/p/${p.id}`} className="hs-now" key={p.id}>
             <span className={`pill ${p.status}`}>{STATUS[p.status]}</span>
             <span className="hs-now-t">
-              <b>{petTitle(p)}{isSample(p) && <small> · ตัวอย่าง</small>}</b>
+              <b>{petTitle(p)}{isSample(p) && <small> · {t("sample")}</small>}</b>
               <small>{areaName(p.area)} · {eventVerb(p)} <TimeAgo iso={eventAt(p)} /></small>
             </span>
             <span className="hs-arrow" aria-hidden="true">↗</span>
@@ -75,9 +76,9 @@ export default function HeroShow({ posts }) {
 
       <div className="hs-side">
         {thumbs.map((k) => (
-          <button key={slides[k].id} type="button" className="hs-thumb" onClick={() => { go(k); }} aria-label={`ดู ${petTitle(slides[k])}`}>
+          <button key={slides[k].id} type="button" className="hs-thumb" onClick={() => { go(k); }} aria-label={t("hero_view_x", { name: petTitle(slides[k]) })}>
             <PetPhoto post={slides[k]} size={120} />
-            <span className="hs-thumb-l">ดู</span>
+            <span className="hs-thumb-l">{t("hero_view")}</span>
             <span className="hs-thumb-n">{petTitle(slides[k])}</span>
             <span className="hs-thumb-a" aria-hidden="true">↗</span>
           </button>
@@ -85,12 +86,12 @@ export default function HeroShow({ posts }) {
       </div>
 
       <div className="hs-bar">
-        <button type="button" className="hs-pause" onClick={() => setPlaying((v) => !v)} aria-pressed={!playing} aria-label={playing ? "หยุดชั่วคราว" : "เล่นต่อ"}>
+        <button type="button" className="hs-pause" onClick={() => setPlaying((v) => !v)} aria-pressed={!playing} aria-label={playing ? t("pause") : t("play")}>
           {playing
             ? <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.5 4.5h3.5v15H6.5zM14 4.5h3.5v15H14z" /></svg>
             : <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" /></svg>}
         </button>
-        <div className="hs-track" role="tablist" aria-label="เลือกตัว">
+        <div className="hs-track" role="tablist" aria-label={t("hero_pick")}>
           {slides.map((s, k) => (
             <button key={s.id} type="button" role="tab" aria-selected={k === i} aria-label={petTitle(s)} onClick={() => go(k)}
               className={`hs-seg${k < i ? " past" : ""}${k === i ? " cur" : ""}`}>
@@ -101,9 +102,9 @@ export default function HeroShow({ posts }) {
         <div className="hs-cta">
           <Link href="/new?type=lost" className="hs-cta-main">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="12" cy="15.5" rx="5" ry="4.2" /><ellipse cx="5.6" cy="10" rx="2.1" ry="2.6" /><ellipse cx="9.4" cy="5.9" rx="2.1" ry="2.7" /><ellipse cx="14.6" cy="5.9" rx="2.1" ry="2.7" /><ellipse cx="18.4" cy="10" rx="2.1" ry="2.6" /></svg>
-            น้องของฉันหาย
+            {t("cta_lost")}
           </Link>
-          <Link href="/new?type=found" className="hs-cta-alt" aria-label="ฉันเจอน้องหลง">ฉันเจอน้องหลง <span aria-hidden="true">↗</span></Link>
+          <Link href="/new?type=found" className="hs-cta-alt" aria-label={t("cta_found")}>{t("cta_found")} <span aria-hidden="true">↗</span></Link>
         </div>
       </div>
     </section>

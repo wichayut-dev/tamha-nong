@@ -9,7 +9,8 @@ import WhenPicker, { toLocalInput } from "@/components/WhenPicker";
 import SetupNotice from "@/components/SetupNotice";
 import { useToast } from "@/components/Toast";
 import { addSighting, deletePost, getPost, isConfigured, markHome, reportPost, subscribePosts, uploadPhoto } from "@/lib/supabase";
-import { AREAS, FUR, STATUS, areaName, eventAt, eventVerb, fullDateTime, seenAt, getToken, gmapsAreaUrl, gmapsUrl, nearestArea, petTitle, safePhoto, speciesName, timeAgo } from "@/lib/data";
+import { AREAS, STATUS, areaName, eventAt, eventVerb, furName, fullDateTime, isSample, seenAt, getToken, gmapsAreaUrl, gmapsUrl, nearestArea, petTitle, safePhoto, speciesName } from "@/lib/data";
+import { t } from "@/lib/i18n";
 import TimeAgo from "@/components/TimeAgo";
 
 const LocationPicker = dynamic(() => import("@/components/LocationPicker"), { ssr: false });
@@ -45,9 +46,9 @@ export default function PostPage() {
   }, [id, load]);
 
   if (!isConfigured) return <SetupNotice />;
-  if (error) return <div className="notice error">โหลดประกาศไม่สำเร็จ: {error}</div>;
+  if (error) return <div className="notice error">{t("load_fail", { e: error })}</div>;
   if (post === undefined) return <div className="detail"><div className="skeleton" /><div className="skeleton" /></div>;
-  if (post === null) return <div className="empty">ไม่พบประกาศนี้ อาจถูกลบหรือซ่อนไปแล้ว<br /><Link href="/" className="btn" style={{ marginTop: 12 }}>กลับหน้าประกาศ</Link></div>;
+  if (post === null) return <div className="empty">{t("not_found")}<br /><Link href="/" className="btn" style={{ marginTop: 12 }}>{t("back_feed")}</Link></div>;
 
   const run = async (fn, okMsg) => {
     setBusy(true);
@@ -57,15 +58,15 @@ export default function PostPage() {
 
   async function copy(text, msg) {
     try { await navigator.clipboard.writeText(text); showToast(msg); }
-    catch { showToast("คัดลอกไม่ได้ กดค้างที่ข้อความเพื่อคัดลอก"); }
+    catch { showToast(t("copy_fail")); }
   }
 
   async function share() {
     const url = `${window.location.origin}/p/${post.id}`;
-    const text = `${STATUS[post.status]}: ${petTitle(post)} (${areaName(post.area)}) ช่วยแชร์ด้วยนะครับ`;
+    const text = t("share_text", { status: STATUS[post.status], name: petTitle(post), area: areaName(post.area) });
     try {
       if (navigator.share) await navigator.share({ title: "ตามหาน้อง ภูเก็ต", text, url });
-      else await copy(`${text}\n${url}`, "คัดลอกลิงก์แล้ว นำไปวางใน LINE หรือ Facebook ได้เลย");
+      else await copy(`${text}\n${url}`, t("share_copied"));
     } catch {}
   }
 
@@ -76,31 +77,32 @@ export default function PostPage() {
       await addSighting(post.id, sArea, sNote.trim(), url, sLoc, new Date(sWhen).toISOString());
       setPanel(null); setSNote(""); setSPhoto(null); setSLoc(null); setSWhen(toLocalInput(new Date()));
       await load();
-    }, "ส่งข้อมูลแล้ว ขอบคุณที่ช่วยตามหา");
+    }, t("sight_sent"));
   };
 
   const submitReport = (e) => {
     e.preventDefault();
     if (!reason.trim()) return;
-    run(async () => { await reportPost(post.id, reason.trim()); setPanel(null); setReason(""); }, "ส่งรายงานให้ผู้ดูแลแล้ว");
+    run(async () => { await reportPost(post.id, reason.trim()); setPanel(null); setReason(""); }, t("report_sent"));
   };
 
   const onHome = () => run(async () => {
-    if (!(await markHome(post.id, token))) throw new Error("รหัสแก้ไขไม่ถูกต้อง");
+    if (!(await markHome(post.id, token))) throw new Error(t("bad_token"));
     await load();
-  }, "ยินดีด้วย! น้องได้กลับบ้านแล้ว");
+  }, t("home_ok"));
 
   const onDelete = () => run(async () => {
-    if (!(await deletePost(post.id, token))) throw new Error("รหัสแก้ไขไม่ถูกต้อง");
+    if (!(await deletePost(post.id, token))) throw new Error(t("bad_token"));
     router.push("/");
   });
 
   const sightings = post.sightings ?? [];
+  const placeLabel = t(post.status === "found" ? "place_found" : post.status === "lost" ? "place_lost" : "place_event");
   const tel = post.phone.replace(/[^0-9+]/g, "");
 
   return (
     <>
-      <button className="back" onClick={() => (history.length > 1 ? router.back() : router.push("/"))}>← กลับ</button>
+      <button className="back" onClick={() => (history.length > 1 ? router.back() : router.push("/"))}>{t("back")}</button>
       <div className="detail">
         <div className="media">
           <div className="photo">
@@ -111,13 +113,13 @@ export default function PostPage() {
             <PostMiniMap post={post} />
             {safePhoto(post.place_photo_url) && (
               <figure className="place-photo">
-                <img src={safePhoto(post.place_photo_url)} alt={`สถานที่ที่${eventVerb(post) || "เกิดเหตุ"}`} loading="lazy" />
-                <figcaption>📍 สถานที่ที่{eventVerb(post) || "เกิดเหตุ"} · {areaName(post.area)}</figcaption>
+                <img src={safePhoto(post.place_photo_url)} alt={placeLabel} loading="lazy" />
+                <figcaption>📍 {placeLabel} · {areaName(post.area)}</figcaption>
               </figure>
             )}
             <div className="mini-legend">
-              <span><i style={{ background: post.status === "found" ? "var(--found)" : "var(--lost)" }} />จุดที่{post.status === "found" ? "พบ" : "หาย"}</span>
-              <span><i style={{ background: "#f08c2e" }} />จุดที่มีคนเห็น</span>
+              <span><i style={{ background: post.status === "found" ? "var(--found)" : "var(--lost)" }} />{t(post.status === "found" ? "spot_found" : "spot_lost")}</span>
+              <span><i style={{ background: "#f08c2e" }} />{t("spot_seen")}</span>
             </div>
           </div>
         </div>
@@ -125,24 +127,24 @@ export default function PostPage() {
         <div style={{ display: "grid", gap: 16, minWidth: 0 }}>
           <div>
             <h2 className="dname">{petTitle(post)}</h2>
-            {/^\s*\[ตัวอย่าง\]/.test(post.description || "") && <p className="sample-note">นี่คือประกาศตัวอย่าง ไว้ให้ดูว่าเว็บทำงานอย่างไร เบอร์โทรในประกาศนี้ใช้ติดต่อไม่ได้</p>}
+            {isSample(post) && <p className="sample-note">{t("sample_note")}</p>}
             <div className={`when-line big ${post.status}`}>{eventVerb(post)} <TimeAgo iso={eventAt(post)} clock /> · {areaName(post.area)}</div>
           </div>
 
           <div className="action-row">
             <a className="btn primary big" href={`tel:${tel}`}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
-              โทร{post.status === "found" ? "หาผู้พบ" : "หาเจ้าของ"}
+              {t(post.status === "found" ? "call_finder" : "call_owner")}
             </a>
             {post.status !== "home" && (
-              <button className="btn warm big" onClick={() => setPanel(panel === "sight" ? null : "sight")}>ฉันเห็นตัวนี้</button>
+              <button className="btn warm big" onClick={() => setPanel(panel === "sight" ? null : "sight")}>{t("i_saw")}</button>
             )}
-            <button className="btn big" onClick={share} aria-label="แชร์ประกาศ">แชร์</button>
+            <button className="btn big" onClick={share} aria-label={t("share_aria")}>{t("share")}</button>
           </div>
           {post.status !== "home" && (
             <Link href={`/p/${post.id}/poster`} className="poster-cta">
               <span className="pc-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M6 14h12v7H6z"/></svg></span>
-              <span><b>พิมพ์โปสเตอร์{post.status === "lost" ? "ตามหา" : "พบน้อง"} + QR Code</b><small>ขนาด A4 ไว้ติดเสาไฟ ร้านค้า ป้ายรถเมล์ สแกนแล้วเข้าประกาศนี้</small></span>
+              <span><b>{t(post.status === "lost" ? "poster_lost" : "poster_found")}</b><small>{t("poster_sub")}</small></span>
               <span aria-hidden="true">→</span>
             </Link>
           )}
@@ -150,31 +152,30 @@ export default function PostPage() {
           {panel === "sight" && (
             <form className="inline-form" onSubmit={submitSighting}>
               <div className="f-group">
-                <span className="f-label">ปักหมุดจุดที่เห็น <span className="hint">แนะนำ เจ้าของจะนำทางไปได้ทันที</span></span>
+                <span className="f-label">{t("pin_seen")} <span className="hint">{t("pin_seen_hint")}</span></span>
                 <LocationPicker value={sLoc} color="#f08c2e" height={240}
                   onChange={(v) => { setSLoc(v); if (v) setSArea(nearestArea(v.lat, v.lng)); }} />
               </div>
               <div className="f-group">
-                <span className="f-label">เห็นเมื่อไหร่</span>
-                <WhenPicker id="sWhen" value={sWhen} onChange={setSWhen} presets={[["ตอนนี้", 0], ["30 นาทีก่อน", 30], ["1 ชม.ก่อน", 60], ["3 ชม.ก่อน", 180]]} />
+                <span className="f-label">{t("when_seen")}</span>
+                <WhenPicker id="sWhen" value={sWhen} onChange={setSWhen} presets={[[t("when_now"), 0], [t("when_30m"), 30], [t("when_1h"), 60], [t("when_3h"), 180]]} />
               </div>
-              <label className="f">เห็นที่ไหน
+              <label className="f">{t("where_seen")}
                 <select id="sArea" value={sArea} onChange={(e) => setSArea(e.target.value)}>
-                  {Object.entries(AREAS).map(([k, a]) => <option key={k} value={k}>{a.n}</option>)}
+                  {Object.keys(AREAS).map((k) => <option key={k} value={k}>{areaName(k)}</option>)}
                 </select>
               </label>
-              <label className="f">รายละเอียด <span className="hint">จุดสังเกต เวลา ทิศทางที่ไป</span>
+              <label className="f">{t("details")} <span className="hint">{t("details_hint")}</span>
                 <input id="sNote" type="text" maxLength={120} value={sNote} onChange={(e) => setSNote(e.target.value)} />
               </label>
-              <ImagePicker id="sPhoto" value={sPhoto} onChange={setSPhoto} label="แนบรูปที่ถ่ายได้ (ไม่บังคับ)" compact />
-              <button className="btn primary small" type="submit" disabled={busy}>{busy ? "กำลังส่ง…" : "ส่งข้อมูล"}</button>
+              <ImagePicker id="sPhoto" value={sPhoto} onChange={setSPhoto} label={t("attach_photo")} compact />
+              <button className="btn primary small" type="submit" disabled={busy}>{busy ? t("sending") : t("send")}</button>
             </form>
           )}
 
           {isNew && token && (
             <div className="token-box">
-              <strong>ลงประกาศเรียบร้อย!</strong> เบราว์เซอร์นี้จำสิทธิ์แก้ไขประกาศไว้แล้ว
-              ถ้าเปลี่ยนเครื่อง ให้เก็บรหัสนี้ไว้: <code>{token}</code>
+              <strong>{t("posted_ok")}</strong> {t("token_note")} <code>{token}</code>
             </div>
           )}
 
@@ -182,86 +183,86 @@ export default function PostPage() {
 
           <section className="panel">
             <dl className="facts">
-              <dt>ชนิด</dt><dd>{speciesName(post)}</dd>
-              <dt>สี</dt><dd>{FUR[post.fur]?.[0] ?? "-"}</dd>
-              <dt>พื้นที่</dt><dd>{areaName(post.area)}</dd>
-              {eventVerb(post) && <><dt>{eventVerb(post)}เมื่อ</dt><dd>{fullDateTime(eventAt(post))}</dd></>}
-              <dt>ลงประกาศ</dt><dd>{fullDateTime(post.created_at)}</dd>
-              {post.reward && <><dt>ค่าตอบแทน</dt><dd style={{ color: "var(--lost)" }}>{post.reward}</dd></>}
+              <dt>{t("f_species")}</dt><dd>{speciesName(post)}</dd>
+              <dt>{t("f_color")}</dt><dd>{furName(post.fur) || "-"}</dd>
+              <dt>{t("f_area")}</dt><dd>{areaName(post.area)}</dd>
+              {eventVerb(post) && <><dt>{t(post.status === "found" ? "f_when_found" : "f_when_lost")}</dt><dd>{fullDateTime(eventAt(post))}</dd></>}
+              <dt>{t("f_posted")}</dt><dd>{fullDateTime(post.created_at)}</dd>
+              {post.reward && <><dt>{t("f_reward")}</dt><dd style={{ color: "var(--lost)" }}>{post.reward}</dd></>}
             </dl>
             <a className="btn gmaps" href={gmapsUrl(post.lat, post.lng)} target="_blank" rel="noopener noreferrer">
-              <GmapsIcon /> นำทางไปจุดที่{post.status === "found" ? "พบ" : "หาย"}ด้วย Google Maps
+              <GmapsIcon /> {t(post.status === "found" ? "nav_to_found" : "nav_to_lost")}
             </a>
           </section>
 
           <section className="panel contact-card">
-            <h3>ติดต่อ{post.status === "found" ? "ผู้พบ" : "เจ้าของ"}{post.contact_name ? ` · ${post.contact_name}` : ""}</h3>
+            <h3>{t(post.status === "found" ? "contact_finder" : "contact_owner")}{post.contact_name ? ` · ${post.contact_name}` : ""}</h3>
             <div className="contact-line">
               <a className="phone" href={`tel:${tel}`}>{post.phone}</a>
               <div style={{ display: "flex", gap: 8 }}>
-                <a className="btn small primary" href={`tel:${tel}`}>โทร</a>
-                <button className="btn small" onClick={() => copy(post.phone, "คัดลอกเบอร์แล้ว")}>คัดลอก</button>
+                <a className="btn small primary" href={`tel:${tel}`}>{t("call")}</a>
+                <button className="btn small" onClick={() => copy(post.phone, t("phone_copied"))}>{t("copy")}</button>
               </div>
             </div>
             {post.line_id && (
               <div className="contact-line">
                 <span>LINE: <strong>{post.line_id}</strong></span>
-                <button className="btn small" onClick={() => copy(post.line_id, "คัดลอก LINE ID แล้ว")}>คัดลอก</button>
+                <button className="btn small" onClick={() => copy(post.line_id, t("line_copied"))}>{t("copy")}</button>
               </div>
             )}
           </section>
 
           <div className="btns">
             {token && post.status !== "home" && (
-              <button className="btn homebtn" onClick={onHome} disabled={busy}>ทำเครื่องหมายว่ากลับบ้านแล้ว</button>
+              <button className="btn homebtn" onClick={onHome} disabled={busy}>{t("mark_home")}</button>
             )}
             {token && panel !== "delete" && (
-              <button className="btn danger small" onClick={() => setPanel("delete")}>ลบประกาศของฉัน</button>
+              <button className="btn danger small" onClick={() => setPanel("delete")}>{t("delete_mine")}</button>
             )}
             {token && panel === "delete" && (
               <div className="inline-form">
-                ลบประกาศนี้ถาวร? ข้อมูลคนที่แจ้งว่าเห็นจะหายไปด้วย
+                {t("delete_confirm")}
                 <div className="seg">
-                  <button type="button" onClick={() => setPanel(null)}>ยกเลิก</button>
-                  <button type="button" onClick={onDelete} disabled={busy} style={{ color: "var(--lost)" }}>ลบเลย</button>
+                  <button type="button" onClick={() => setPanel(null)}>{t("cancel")}</button>
+                  <button type="button" onClick={onDelete} disabled={busy} style={{ color: "var(--lost)" }}>{t("delete_now")}</button>
                 </div>
               </div>
             )}
           </div>
 
           <div>
-            <div className="section-h">มีคนเห็น ({sightings.length})</div>
+            <div className="section-h">{t("seen_count", { n: sightings.length })}</div>
             <div className="sightings">
               {sightings.length ? sightings.map((s) => (
                 <div className="sight" key={s.id}>
                   <div>
-                    {s.note || "แจ้งว่าเห็น"}
+                    {s.note || t("reported_seen")}
                     <div className="meta">
-                      เห็น <TimeAgo iso={seenAt(s)} clock /> · {areaName(s.area)} ·{" "}
-                      <a href={s.lat ? gmapsUrl(s.lat, s.lng) : gmapsAreaUrl(s.area)} target="_blank" rel="noopener noreferrer" className="inline-link">{s.lat ? "นำทางไปจุดที่เห็น" : "นำทาง"}</a>
+                      {t("seen_prefix")} <TimeAgo iso={seenAt(s)} clock /> · {areaName(s.area)} ·{" "}
+                      <a href={s.lat ? gmapsUrl(s.lat, s.lng) : gmapsAreaUrl(s.area)} target="_blank" rel="noopener noreferrer" className="inline-link">{s.lat ? t("nav_to_seen") : t("navigate")}</a>
                     </div>
                   </div>
                   {safePhoto(s.photo_url) && (
                     <a href={safePhoto(s.photo_url)} target="_blank" rel="noopener noreferrer">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={safePhoto(s.photo_url)} alt="รูปจากคนที่เห็น" loading="lazy" />
+                      <img src={safePhoto(s.photo_url)} alt={t("seen_photo_alt")} loading="lazy" />
                     </a>
                   )}
                 </div>
-              )) : <div className="meta">ยังไม่มีใครแจ้ง ถ้าเห็นน้องตัวนี้ กดปุ่ม "ฉันเห็นตัวนี้"</div>}
+              )) : <div className="meta">{t("none_seen")}</div>}
             </div>
           </div>
 
           {panel !== "report" ? (
-            <button className="report-link" onClick={() => setPanel("report")}>แจ้งโพสต์ไม่เหมาะสม</button>
+            <button className="report-link" onClick={() => setPanel("report")}>{t("report_post")}</button>
           ) : (
             <form className="inline-form" onSubmit={submitReport}>
-              <label className="f">เหตุผล
-                <input id="reason" type="text" maxLength={200} placeholder="เช่น สแปม, ข้อมูลปลอม, ขายสัตว์" value={reason} onChange={(e) => setReason(e.target.value)} />
+              <label className="f">{t("reason")}
+                <input id="reason" type="text" maxLength={200} placeholder={t("reason_ph")} value={reason} onChange={(e) => setReason(e.target.value)} />
               </label>
               <div className="seg">
-                <button type="button" onClick={() => setPanel(null)}>ยกเลิก</button>
-                <button type="submit" disabled={busy || !reason.trim()}>ส่งรายงาน</button>
+                <button type="button" onClick={() => setPanel(null)}>{t("cancel")}</button>
+                <button type="submit" disabled={busy || !reason.trim()}>{t("send_report")}</button>
               </div>
             </form>
           )}

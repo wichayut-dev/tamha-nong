@@ -1,4 +1,6 @@
+"use client";
 import Link from "next/link";
+import { t } from "@/lib/i18n";
 import { Logo } from "./Header";
 
 export default function Footer() {
@@ -7,14 +9,14 @@ export default function Footer() {
       <div className="wrap foot-in">
         <div className="brand">
           <Logo size={28} />
-          <div className="wordmark"><strong>ตามหาน้อง</strong><small>ภูเก็ต</small></div>
+          <div className="wordmark"><strong>ตามหาน้อง</strong><small>{t("brand_sub")}</small></div>
         </div>
-        <p className="meta">โปรเจกต์ชุมชนเพื่อช่วยสัตว์เลี้ยงในภูเก็ตได้กลับบ้าน ใช้ฟรี ไม่มีโฆษณา</p>
+        <p className="meta">{t("footer_about")}</p>
         <nav className="foot-links">
-          <Link href="/">ประกาศ</Link>
-          <Link href="/map">แผนที่</Link>
-          <Link href="/new">ลงประกาศ</Link>
-          <Link href="/privacy">ความเป็นส่วนตัว</Link>
+          <Link href="/">{t("nav_posts")}</Link>
+          <Link href="/map">{t("nav_map")}</Link>
+          <Link href="/new">{t("nav_new_plain")}</Link>
+          <Link href="/privacy">{t("privacy")}</Link>
         </nav>
       </div>
     </footer>

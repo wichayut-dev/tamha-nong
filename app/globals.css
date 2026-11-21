@@ -1217,3 +1217,16 @@ body { background: linear-gradient(180deg, #cdeae7 0, #e3efe9 380px, var(--bg) 6
 /* แก้: รูปในโปสเตอร์ต้องอยู่ในกรอบเสมอ (เดิมรูปสูงเกินกรอบเลยโดนตัดล่าง) */
 .ps-photo { min-height: 0; }
 .ps-photo .ps-fg { position: absolute !important; inset: 0; width: 100%; height: 100%; }
+
+/* ===== v12: ปุ่มเลือกภาษา ===== */
+.lang-sel { position: relative; display: inline-flex; align-items: center; gap: 6px; height: 42px; padding: 0 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); margin-left: auto; flex: none; }
+.lang-sel:hover, .lang-sel:focus-within { border-color: var(--sea); }
+.lang-sel svg { color: var(--muted); flex: none; }
+.lang-sel select { appearance: none; -webkit-appearance: none; border: 0; background: transparent; color: inherit; font: inherit; font-size: 14px; font-weight: 500; padding: 0 2px; cursor: pointer; outline: none; max-width: 92px; }
+.nav + .lang-sel { margin-left: 6px; }
+.lang-sel + .bell-wrap { margin-left: 8px !important; }
+@media (max-width: 420px) { .lang-sel { padding: 0 8px; gap: 4px; } .lang-sel select { font-size: 13px; max-width: 72px; } }
+/* หัวข้อใหญ่ในภาษาที่คำยาว ให้ตัดบรรทัดได้ */
+.hs h1.hs-h1-ru span, .hs h1.hs-h1-en span { white-space: normal !important; }
+.hs h1.hs-h1-ru { font-size: clamp(36px, 4vw, 64px) !important; }
+@media (max-width: 700px) { .hs h1.hs-h1-ru { font-size: 34px !important; } }

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { getPost } from "@/lib/supabase";
 import { areaName, eventAt, fullDateTime, petTitle, safePhoto, speciesName } from "@/lib/data";
+import { t } from "@/lib/i18n";
 
 function loadQr() {
   if (window.qrcode) return Promise.resolve(window.qrcode);
@@ -12,7 +13,7 @@ function loadQr() {
     const s = document.createElement("script");
     s.src = "https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js";
     s.onload = () => ok(window.qrcode);
-    s.onerror = () => no(new Error("โหลดตัวสร้าง QR ไม่สำเร็จ"));
+    s.onerror = () => no(new Error(t("qr_fail")));
     document.head.appendChild(s);
   });
 }
@@ -54,28 +55,28 @@ export default function Poster() {
   return (
     <div className="poster-page">
       <div className="poster-tools no-print">
-        <Link href={`/p/${id}`} className="btn">← กลับไปหน้าประกาศ</Link>
-        <button className="btn primary" onClick={() => window.print()}>พิมพ์ / บันทึกเป็น PDF</button>
+        <Link href={`/p/${id}`} className="btn">{t("back_post")}</Link>
+        <button className="btn primary" onClick={() => window.print()}>{t("print")}</button>
       </div>
       {photo && (
-        <div className="poster-fit no-print" role="group" aria-label="การจัดรูป">
-          <span>รูปน้อง:</span>
-          <button type="button" className={`chip`} aria-pressed={fit === "whole"} onClick={() => setFit("whole")}>เห็นทั้งตัว</button>
-          <button type="button" className={`chip`} aria-pressed={fit === "fill"} onClick={() => setFit("fill")}>เต็มกรอบ</button>
-          <button type="button" className="chip" onClick={() => setRot((r) => (r + 90) % 360)} aria-label="หมุนรูป 90 องศา">หมุนรูป ↻</button>
+        <div className="poster-fit no-print" role="group" aria-label={t("fit_aria")}>
+          <span>{t("pet_photo")}</span>
+          <button type="button" className={`chip`} aria-pressed={fit === "whole"} onClick={() => setFit("whole")}>{t("fit_whole")}</button>
+          <button type="button" className={`chip`} aria-pressed={fit === "fill"} onClick={() => setFit("fill")}>{t("fit_fill")}</button>
+          <button type="button" className="chip" onClick={() => setRot((r) => (r + 90) % 360)} aria-label={t("rotate_aria")}>{t("rotate")}</button>
           {fit === "fill" && (
-            <label className="poster-pos">เลื่อนรูปขึ้นลง
+            <label className="poster-pos">{t("move_photo")}
               <input type="range" min="0" max="100" value={pos} onChange={(e) => setPos(+e.target.value)} />
             </label>
           )}
         </div>
       )}
-      <p className="hint no-print">เลือกกระดาษ A4 แนวตั้ง ปิด “หัวกระดาษและท้ายกระดาษ” ในหน้าต่างพิมพ์ จะได้โปสเตอร์เต็มหน้า</p>
+      <p className="hint no-print">{t("print_hint")}</p>
 
       <article className={`poster ${lost ? "is-lost" : "is-found"}`}>
         <header className="ps-head">
-          <h1>{lost ? "ตามหา" : "พบน้องหลง"}</h1>
-          <p>{lost ? `${speciesName(p)}หาย · ใครพบเห็นโปรดติดต่อ` : `ใครเป็นเจ้าของ${speciesName(p)}ตัวนี้ โปรดติดต่อ`}</p>
+          <h1>{t(lost ? "ps_lost" : "ps_found")}</h1>
+          <p>{t(lost ? "ps_lost_sub" : "ps_found_sub", { species: speciesName(p), species_lc: speciesName(p).toLocaleLowerCase() })}</p>
         </header>
         <div className={`ps-photo fit-${fit}`} ref={box}>
           {photo ? (
@@ -85,29 +86,29 @@ export default function Poster() {
                 onLoad={(e) => { nat.current = { w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight }; setRot((r) => r); }}
                 style={{ ...(fit === "fill" ? { objectPosition: `50% ${pos}%` } : {}), transform: rot ? `rotate(${rot}deg) scale(${fit === "whole" ? rs : 1})` : undefined }} />
             </>
-          ) : <span>ไม่มีรูป</span>}
+          ) : <span>{t("no_photo")}</span>}
         </div>
         <div className="ps-body">
           <h2>{petTitle(p)}</h2>
           <ul>
-            <li><b>{lost ? "หายที่" : "พบที่"}</b> {areaName(p.area)}</li>
-            <li><b>เมื่อ</b> {fullDateTime(eventAt(p))}</li>
+            <li><b>{t(lost ? "ps_where_lost" : "ps_where_found")}</b> {areaName(p.area)}</li>
+            <li><b>{t("ps_when")}</b> {fullDateTime(eventAt(p))}</li>
             {p.description && <li className="ps-desc">{p.description}</li>}
           </ul>
-          {p.reward && lost && <div className="ps-reward">รางวัลนำส่ง {p.reward}</div>}
+          {p.reward && lost && <div className="ps-reward">{t("ps_reward", { r: p.reward })}</div>}
         </div>
         <footer className="ps-foot">
           <div className="ps-call">
-            <span>โทร</span>
+            <span>{t("ps_call")}</span>
             <strong>{p.phone}</strong>
             {p.line_id && <small>LINE: {p.line_id}</small>}
           </div>
           <div className="ps-qr">
             <div className="ps-qr-img" dangerouslySetInnerHTML={{ __html: qr }} />
-            <small>สแกนดูรูปเพิ่ม<br />และแจ้งจุดที่เห็น</small>
+            <small>{t("ps_scan1")}<br />{t("ps_scan2")}</small>
           </div>
         </footer>
-        <div className="ps-brand">ตามหาน้อง ภูเก็ต · แจ้งได้ฟรี ไม่ต้องสมัครสมาชิก</div>
+        <div className="ps-brand">{t("ps_brand")}</div>
       </article>
     </div>
   );

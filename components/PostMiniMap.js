@@ -4,6 +4,7 @@ import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { STATUS, gmapsUrl, timeAgo } from "@/lib/data";
 import TimeAgo from "./TimeAgo";
+import { t } from "@/lib/i18n";
 
 const COLORS = { lost: "#e0475a", found: "#1f9468", home: "#2f6fd6" };
 const bigPin = (color) => L.divIcon({
@@ -23,13 +24,13 @@ export default function PostMiniMap({ post }) {
       className="mini-map" scrollWheelZoom={false}>
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker position={[post.lat, post.lng]} icon={bigPin(COLORS[post.status])}>
-        <Popup><div className="popup"><strong>จุดที่{post.status === "found" ? "พบ" : "หาย"} · {STATUS[post.status]}</strong>
-          <a href={gmapsUrl(post.lat, post.lng)} target="_blank" rel="noopener noreferrer">นำทางด้วย Google Maps ↗</a></div></Popup>
+        <Popup><div className="popup"><strong>{t(post.status === "found" ? "spot_found" : "spot_lost")} · {STATUS[post.status]}</strong>
+          <a href={gmapsUrl(post.lat, post.lng)} target="_blank" rel="noopener noreferrer">{t("nav_gmaps")}</a></div></Popup>
       </Marker>
       {seen.map((s) => (
         <Marker key={s.id} position={[s.lat, s.lng]} icon={seenDot}>
-          <Popup><div className="popup"><strong>มีคนเห็น · <TimeAgo iso={s.seen_at || s.created_at} clock /></strong>{s.note && <span>{s.note}</span>}
-            <a href={gmapsUrl(s.lat, s.lng)} target="_blank" rel="noopener noreferrer">นำทางด้วย Google Maps ↗</a></div></Popup>
+          <Popup><div className="popup"><strong>{t("someone_saw")} · <TimeAgo iso={s.seen_at || s.created_at} clock /></strong>{s.note && <span>{s.note}</span>}
+            <a href={gmapsUrl(s.lat, s.lng)} target="_blank" rel="noopener noreferrer">{t("nav_gmaps")}</a></div></Popup>
         </Marker>
       ))}
     </MapContainer>

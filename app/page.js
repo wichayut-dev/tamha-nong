@@ -9,7 +9,8 @@ import { PetPhoto } from "@/components/PetAvatar";
 import TimeAgo from "@/components/TimeAgo";
 import SetupNotice from "@/components/SetupNotice";
 import { isConfigured, listPosts, subscribePosts } from "@/lib/supabase";
-import { FUR, STATUS, areaName, petTitle } from "@/lib/data";
+import { FUR, areaName, furName } from "@/lib/data";
+import { t } from "@/lib/i18n";
 
 export default function FeedPage() {
   const [posts, setPosts] = useState(null);
@@ -51,7 +52,7 @@ export default function FeedPage() {
       (p) =>
         (status === "all" || p.status === status) &&
         (species === "all" || p.species === species) &&
-        (!s || [p.name, p.description, areaName(p.area), FUR[p.fur]?.[0], p.contact_name, p.species_other].join(" ").toLowerCase().includes(s))
+        (!s || [p.name, p.description, areaName(p.area), furName(p.fur), FUR[p.fur]?.[0], p.contact_name, p.species_other].join(" ").toLowerCase().includes(s))
     );
   }, [posts, status, species, q]);
 
@@ -66,51 +67,51 @@ export default function FeedPage() {
       {posts && posts.length > 0 && <HeroShow posts={posts} />}
 
       <section className="hero">
-        <aside className="hero-feed" aria-label="ความเคลื่อนไหวล่าสุด">
+        <aside className="hero-feed" aria-label={t("feed_aria")}>
           <div className="hf-head">
-            <span className="hf-live"><i />แถวบ้านคุณมีน้องหายไหม? ดูบนแผนที่</span>
-            <Link href="/map" className="hf-map">เปิดแผนที่เต็ม →</Link>
+            <span className="hf-live"><i />{t("map_teaser")}</span>
+            <Link href="/map" className="hf-map">{t("open_full_map")}</Link>
           </div>
           <div className="hf-mapwrap">
             <HeroMap posts={posts} />
-            <div className="hf-legend"><span><i className="lost" />ตามหา</span><span><i className="found" />มีคนพบ</span><span><i className="ring" />ใหม่ 24 ชม.</span></div>
+            <div className="hf-legend"><span><i className="lost" />{t("status.lost")}</span><span><i className="found" />{t("status.found")}</span><span><i className="ring" />{t("legend_new")}</span></div>
           </div>
           <div className="hf-foot">
-            <div><b>{posts ? counts.lost : "–"}</b><span>กำลังตามหา</span></div>
-            <div><b>{posts ? counts.found : "–"}</b><span>มีคนพบ</span></div>
-            <div><b>{posts ? counts.home : "–"}</b><span>กลับบ้านแล้ว</span></div>
+            <div><b>{posts ? counts.lost : "–"}</b><span>{t("count_lost")}</span></div>
+            <div><b>{posts ? counts.found : "–"}</b><span>{t("status.found")}</span></div>
+            <div><b>{posts ? counts.home : "–"}</b><span>{t("status.home")}</span></div>
           </div>
         </aside>
       </section>
 
       
       <div className="section-title">
-        <h2>ประกาศล่าสุด</h2>
-        <span className="live"><i />อัปเดตอัตโนมัติ</span>
+        <h2>{t("latest")}</h2>
+        <span className="live"><i />{t("auto_update")}</span>
       </div>
 
       <div className="toolbar">
         <div className="search">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--muted)", flex: "none" }}><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-          <input id="q" type="search" placeholder="ค้นหา: ชื่อ, สี, ปลอกคอ, พื้นที่" value={q} onChange={(e) => setQ(e.target.value)} aria-label="ค้นหาประกาศ" />
+          <input id="q" type="search" placeholder={t("search_ph")} value={q} onChange={(e) => setQ(e.target.value)} aria-label={t("search_aria")} />
         </div>
         <div className="chips">
-          {chip("all", status, setStatus, "ทั้งหมด")}
-          {chip("lost", status, setStatus, `ตามหา${posts ? " " + counts.lost : ""}`)}
-          {chip("found", status, setStatus, `มีคนพบ${posts ? " " + counts.found : ""}`)}
-          {chip("home", status, setStatus, `กลับบ้านแล้ว${posts ? " " + counts.home : ""}`)}
+          {chip("all", status, setStatus, t("all"))}
+          {chip("lost", status, setStatus, `${t("status.lost")}${posts ? " " + counts.lost : ""}`)}
+          {chip("found", status, setStatus, `${t("status.found")}${posts ? " " + counts.found : ""}`)}
+          {chip("home", status, setStatus, `${t("status.home")}${posts ? " " + counts.home : ""}`)}
           <span className="divider" />
-          {chip("all", species, setSpecies, "ทุกชนิด")}
-          {chip("dog", species, setSpecies, "สุนัข")}
-          {chip("cat", species, setSpecies, "แมว")}
-          {chip("other", species, setSpecies, "อื่นๆ")}
+          {chip("all", species, setSpecies, t("all_species"))}
+          {chip("dog", species, setSpecies, t("species.dog"))}
+          {chip("cat", species, setSpecies, t("species.cat"))}
+          {chip("other", species, setSpecies, t("species.other"))}
         </div>
         <div className="toolbar-row">
-          <span className="meta">{posts ? `${shown.length} ประกาศ` : "กำลังโหลด…"}</span>
+          <span className="meta">{posts ? t("n_posts", { n: shown.length }) : t("loading")}</span>
         </div>
       </div>
 
-      {error && <div className="notice error">โหลดประกาศไม่สำเร็จ: {error} <button className="btn small" onClick={load}>ลองใหม่</button></div>}
+      {error && <div className="notice error">{t("load_fail", { e: error })} <button className="btn small" onClick={load}>{t("retry")}</button></div>}
 
       {!posts && !error ? (
         <div className="grid">{Array.from({ length: 6 }, (_, i) => <div className="skeleton" key={i} />)}</div>
@@ -118,7 +119,7 @@ export default function FeedPage() {
         <div className="grid">{shown.map((p) => <PetCard key={p.id} post={p} />)}</div>
       ) : posts ? (
         <div className="empty">
-          {posts.length ? <>ไม่พบประกาศที่ตรงกับการค้นหา<br />ลองเปลี่ยนตัวกรองหรือคำค้น</> : <>ยังไม่มีประกาศ<br /><Link href="/new" className="btn warm" style={{ marginTop: 12 }}>ลงประกาศแรก</Link></>}
+          {posts.length ? <>{t("no_match")}<br />{t("no_match2")}</> : <>{t("no_posts")}<br /><Link href="/new" className="btn warm" style={{ marginTop: 12 }}>{t("first_post")}</Link></>}
         </div>
       ) : null}
     </>

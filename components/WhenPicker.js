@@ -1,4 +1,5 @@
 "use client";
+import { t } from "@/lib/i18n";
 // เลือกเวลาที่เกิดเหตุ: ปุ่มลัด + ช่องเลือกวันเวลา
 const pad = (n) => String(n).padStart(2, "0");
 export function toLocalInput(d) {
@@ -7,7 +8,7 @@ export function toLocalInput(d) {
 
 export default function WhenPicker({ id, value, onChange, presets }) {
   const now = new Date();
-  const opts = presets ?? [["ตอนนี้", 0], ["1 ชม.ก่อน", 60], ["3 ชม.ก่อน", 180], ["เมื่อวาน", 1440]];
+  const opts = presets ?? [[t("when_now"), 0], [t("when_1h"), 60], [t("when_3h"), 180], [t("when_yesterday"), 1440]];
   return (
     <div className="when">
       <div className="chips">
