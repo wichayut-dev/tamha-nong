@@ -6,7 +6,7 @@
 
 A lost-and-found pet board for Phuket. Post once, instead of copy-pasting into every Facebook group. The site opens in Thai and can be switched to English, Chinese or Russian for tourists and expats.
 
-![Home page](docs/home.jpg)
+![Home page](docs/home-board.jpg)
 
 | Post a report | Map | QR poster |
 |---|---|---|
