@@ -3,7 +3,7 @@
 // หน้าผู้ดูแล (/admin) ใช้ภาษาไทยเสมอ
 import { Fragment, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { LANGS, LANG_KEY, detectLang, setCurrentLang, t } from "@/lib/i18n";
+import { LANGS, LANG_KEY, setCurrentLang, t } from "@/lib/i18n";
 
 const Ctx = createContext({ lang: "th", setLang: () => {} });
 export const useLang = () => useContext(Ctx);
@@ -17,8 +17,8 @@ export default function LangProvider({ children }) {
   useEffect(() => {
     let saved = null;
     try { saved = localStorage.getItem(LANG_KEY); } catch {}
-    const l = LANGS.some((x) => x.code === saved) ? saved : detectLang();
-    if (l !== "th") setChosen(l);
+    // เริ่มต้นเป็นภาษาไทยเสมอ เปลี่ยนเฉพาะเมื่อผู้ใช้เคยกดเลือกภาษาอื่นไว้
+    if (saved && saved !== "th" && LANGS.some((x) => x.code === saved)) setChosen(saved);
   }, []);
 
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
