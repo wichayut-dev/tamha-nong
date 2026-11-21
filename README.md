@@ -4,7 +4,7 @@
 
 **Live site: [tamha-nong.vercel.app](https://tamha-nong.vercel.app)**
 
-A lost-and-found pet board for Phuket. Post once, instead of copy-pasting into every Facebook group. The interface is in Thai, since it is built for people in Phuket.
+A lost-and-found pet board for Phuket. Post once, instead of copy-pasting into every Facebook group. The site opens in Thai and can be switched to English, Chinese or Russian for tourists and expats.
 
 ![Home page](docs/home.jpg)
 
@@ -23,6 +23,8 @@ A lost-and-found pet board for Phuket. Post once, instead of copy-pasting into e
 - New posts appear on every device instantly; posts older than 60 days are hidden automatically
 - Admin page: edit, hide, delete, review reports, export CSV
 - Installable on phones as a PWA
+- 4 languages: Thai, English, 中文, Русский. Text people type in their posts (pet name, description, reward) is machine-translated with the free MyMemory API and cached in the browser
+- Home page designed as a community notice board: posts look like paper flyers with tape and tear-off phone tabs; the counters only count real posts, not samples
 
 **Tech stack:** Next.js 15 · React 19 · Supabase (PostgreSQL, Storage, Realtime, Auth) · Leaflet + OpenStreetMap · Vercel
 
@@ -83,6 +85,5 @@ public/         icons and sample images
 ## Roadmap
 
 - Mobile push notifications (Web Push) when someone spots a pet or a pet goes missing nearby
-- English interface
 - CAPTCHA (Cloudflare Turnstile)
 
