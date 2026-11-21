@@ -1244,3 +1244,12 @@ body { background: linear-gradient(180deg, #cdeae7 0, #e3efe9 380px, var(--bg) 6
 .hs h1.hs-h1-ru span, .hs h1.hs-h1-en span { white-space: normal !important; }
 .hs h1.hs-h1-ru { font-size: clamp(36px, 4vw, 64px) !important; }
 @media (max-width: 700px) { .hs h1.hs-h1-ru { font-size: 34px !important; } }
+
+/* ===== v13: โลโก้ "บ้านหูแมว" ===== */
+.logo-mark { filter: none !important; background: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible; }
+.logo-mark .lm-house { fill: var(--accent); stroke: var(--accent); }
+.logo-mark .lm-bar { stroke: var(--accent); fill: none; }
+.logo-mark .lm-win { fill: #ffd166; transition: fill .2s ease; }
+.logo-mark .lm-door { fill: #fff6ea; stroke: #fff6ea; }
+.brand:hover .logo-mark { transform: translateY(-1px) !important; }
+.brand:hover .logo-mark .lm-win { fill: #ffe08f; }
