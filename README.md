@@ -10,7 +10,7 @@ A lost-and-found pet board for Phuket. Post once, instead of copy-pasting into e
 
 | Post a report | Map | QR poster |
 |---|---|---|
-| ![Post a report](docs/new-post.jpg) | ![Map](docs/map.jpg) | ![Poster](docs/poster.jpg) |
+| ![Post a report](docs/new-post-v2.jpg) | ![Map](docs/map-v2.jpg) | ![Poster](docs/poster-v2.jpg) |
 
 ## Features
 
