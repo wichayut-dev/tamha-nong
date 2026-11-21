@@ -17,6 +17,7 @@ A lost-and-found pet board for Phuket. Post once, instead of copy-pasting into e
 - Report a lost or found pet with a photo of the animal and of the place (HEIC photos from iPhone are supported)
 - Pin the location on a map: use your current position or paste a Google Maps link
 - "I saw this one" button, so people can report where and when they spotted the pet
+- Phone alerts (Web Push) for the person who posted: when someone taps "I saw this one", their phone gets a notification even if the site is closed. Encryption (RFC 8291) and VAPID signing (RFC 8292) are written with `node:crypto`, with no extra library. On iPhone the site must be added to the Home Screen first (iOS 16.4+)
 - Directions to the pin through Google Maps
 - Printable A4 poster with a QR code
 - Owners can close or delete their own post without creating an account
@@ -61,6 +62,8 @@ The admin page is at `/admin`. It is not linked from the public pages.
 ## Deploy
 
 Import this repo into Vercel, add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and deploy.
+
+For phone alerts, also add `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` (a P-256 key pair; the public key must match `lib/push-client.js`) and `PUSH_SECRET` (any long random string), then run `supabase/010_push.sql` with the same `PUSH_SECRET`. A daily Vercel cron calls `/api/keepalive` so the free Supabase project is not paused.
 Then set your site URL in Supabase → Authentication → URL Configuration → Site URL (only needed for password-reset emails).
 
 ## Project structure
@@ -84,6 +87,6 @@ public/         icons and sample images
 
 ## Roadmap
 
-- Mobile push notifications (Web Push) when someone spots a pet or a pet goes missing nearby
+- Alerts when a pet goes missing near you
 - CAPTCHA (Cloudflare Turnstile)
 

@@ -13,6 +13,7 @@ import { addSighting, deletePost, getPost, isConfigured, markHome, reportPost, s
 import { AREAS, STATUS, areaName, eventAt, eventVerb, furName, fullDateTime, isSample, cleanDesc, seenAt, getToken, gmapsAreaUrl, gmapsUrl, nearestArea, petTitle, safePhoto, speciesName } from "@/lib/data";
 import { t } from "@/lib/i18n";
 import TimeAgo from "@/components/TimeAgo";
+import PushToggle from "@/components/PushToggle";
 
 const LocationPicker = dynamic(() => import("@/components/LocationPicker"), { ssr: false });
 const PostMiniMap = dynamic(() => import("@/components/PostMiniMap"), { ssr: false, loading: () => <div className="mini-map skeleton" /> });
@@ -179,6 +180,8 @@ export default function PostPage() {
               <strong>{t("posted_ok")}</strong> {t("token_note")} <code>{token}</code>
             </div>
           )}
+
+          {token && post.status !== "home" && <PushToggle postId={post.id} token={token} />}
 
           <p style={{ margin: 0, whiteSpace: "pre-wrap" }}><Tr>{cleanDesc(post)}</Tr></p>
 
