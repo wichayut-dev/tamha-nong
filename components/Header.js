@@ -5,20 +5,16 @@ import { Bell } from "./Notifications";
 import { LangSwitch } from "./LangProvider";
 import { t } from "@/lib/i18n";
 
-// โลโก้: ป้ายชื่อห้อยปลอกคอ (สิ่งที่ช่วยให้น้องได้กลับบ้าน)
-// ข้างในเป็นหน้า "ครึ่งแมวครึ่งหมา" หูซ้ายตั้งแบบแมว หูขวาพับแบบหมา
+// โลโก้ "บ้านหูแมว": บ้านที่หลังคาเป็นหูแมว หน้าต่างเปิดไฟรอน้องกลับบ้าน
 export function Logo({ size = 38 }) {
   return (
-    <svg className="logo-mark" width={size} height={size * 1.1} viewBox="0 0 40 44" aria-hidden="true">
-      <circle cx="20" cy="5.5" r="3.6" className="ring" fill="none" strokeWidth="2.4" />
-      <circle cx="20" cy="26" r="17" className="tag" />
-      <circle cx="20" cy="26" r="13.6" className="tag-rim" fill="none" strokeWidth="1" />
-      <path d="M11.2 24.5 12.4 14.6 18.4 20.6Z" className="face" strokeLinejoin="round" />
-      <ellipse cx="20.4" cy="28" rx="9.6" ry="8.2" className="face" />
-      <ellipse cx="29.2" cy="24.6" rx="3.3" ry="6.4" transform="rotate(-28 29.2 24.6)" className="ear" />
-      <circle cx="16.6" cy="27" r="1.45" className="eye" />
-      <circle cx="23.6" cy="27" r="1.45" className="eye" />
-      <path d="M18.6 30.2h3.6l-1.8 2.1Z" className="eye" strokeLinejoin="round" />
+    <svg className="logo-mark" width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+      <path className="lm-house" d="M8.5 41V20.5L11 6.5 19.5 13.5h9L37 6.5l2.5 14V41Z" strokeWidth="3" strokeLinejoin="round" />
+      <rect className="lm-win" x="13.6" y="19.6" width="7.4" height="7.4" rx="1.6" />
+      <rect className="lm-win" x="27" y="19.6" width="7.4" height="7.4" rx="1.6" />
+      <path className="lm-bar" d="M17.3 19.6v7.4M13.6 23.3h7.4M30.7 19.6v7.4M27 23.3h7.4" strokeWidth="1.1" />
+      <path className="lm-door" d="M22.3 29.6h3.4L24 31.6Z" strokeWidth="1" strokeLinejoin="round" />
+      <path className="lm-door" d="M19.2 42.5V37.4a4.8 4.8 0 0 1 9.6 0v5.1Z" />
     </svg>
   );
 }
