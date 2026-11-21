@@ -1315,3 +1315,4 @@ body { background: var(--bg) !important; }
 .fl-tear span:last-child { border-right: 0; }
 .flyer:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .flyer { transition: none; } .flyer:hover { transform: rotate(var(--tilt, 0deg)); } }
+@media (max-width: 860px) { .hb { margin: 14px 0 22px; gap: 14px; } .hb-map .hm-map { height: 190px !important; } .hb-map-head { font-size: 13px; } }
