@@ -1,6 +1,7 @@
 "use client";
 // แบนเนอร์สไลด์โชว์: รูปน้องใหญ่ตรงกลาง เปลี่ยนเองทุก 5 วินาที มีแถบเวลา ปุ่มหยุด และรูปตัวถัดไปด้านขวา
 import Link from "next/link";
+import Tr from "./Tr";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PetPhoto } from "./PetAvatar";
 import TimeAgo from "./TimeAgo";
@@ -57,7 +58,7 @@ export default function HeroShow({ posts }) {
           <Link href={`/p/${p.id}`} className="hs-now" key={p.id}>
             <span className={`pill ${p.status}`}>{STATUS[p.status]}</span>
             <span className="hs-now-t">
-              <b>{petTitle(p)}{isSample(p) && <small> · {t("sample")}</small>}</b>
+              <b><Tr>{petTitle(p)}</Tr>{isSample(p) && <small> · {t("sample")}</small>}</b>
               <small>{areaName(p.area)} · {eventVerb(p)} <TimeAgo iso={eventAt(p)} /></small>
             </span>
             <span className="hs-arrow" aria-hidden="true">↗</span>
@@ -79,7 +80,7 @@ export default function HeroShow({ posts }) {
           <button key={slides[k].id} type="button" className="hs-thumb" onClick={() => { go(k); }} aria-label={t("hero_view_x", { name: petTitle(slides[k]) })}>
             <PetPhoto post={slides[k]} size={120} />
             <span className="hs-thumb-l">{t("hero_view")}</span>
-            <span className="hs-thumb-n">{petTitle(slides[k])}</span>
+            <span className="hs-thumb-n"><Tr>{petTitle(slides[k])}</Tr></span>
             <span className="hs-thumb-a" aria-hidden="true">↗</span>
           </button>
         ))}

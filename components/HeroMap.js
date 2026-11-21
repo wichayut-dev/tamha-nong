@@ -1,6 +1,7 @@
 "use client";
 // แผนที่ภูเก็ตเล็กบนหน้าแรก: โทนเทาอ่อนสบายตา หมุดสีตามสถานะ อัปเดตสด
 import "leaflet/dist/leaflet.css";
+import Tr from "./Tr";
 import L from "leaflet";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -39,7 +40,7 @@ export default function HeroMap({ posts }) {
         <Marker key={p.id} position={[p.lat, p.lng]} icon={icon(p.status, new Date(p.created_at).getTime() > day)}
           eventHandlers={{ click: () => router.push(`/p/${p.id}`) }}>
           <Tooltip direction="top" offset={[0, -10]} className="hm-tip">
-            <b>{petTitle(p)}</b> · {STATUS[p.status]}<br /><small>{areaName(p.area)}</small>
+            <b><Tr>{petTitle(p)}</Tr></b> · {STATUS[p.status]}<br /><small>{areaName(p.area)}</small>
           </Tooltip>
         </Marker>
       ))}

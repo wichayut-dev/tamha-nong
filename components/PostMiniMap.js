@@ -1,5 +1,6 @@
 "use client";
 import "leaflet/dist/leaflet.css";
+import Tr from "./Tr";
 import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { STATUS, gmapsUrl, timeAgo } from "@/lib/data";
@@ -29,7 +30,7 @@ export default function PostMiniMap({ post }) {
       </Marker>
       {seen.map((s) => (
         <Marker key={s.id} position={[s.lat, s.lng]} icon={seenDot}>
-          <Popup><div className="popup"><strong>{t("someone_saw")} · <TimeAgo iso={s.seen_at || s.created_at} clock /></strong>{s.note && <span>{s.note}</span>}
+          <Popup><div className="popup"><strong>{t("someone_saw")} · <TimeAgo iso={s.seen_at || s.created_at} clock /></strong>{s.note && <span><Tr>{s.note}</Tr></span>}
             <a href={gmapsUrl(s.lat, s.lng)} target="_blank" rel="noopener noreferrer">{t("nav_gmaps")}</a></div></Popup>
         </Marker>
       ))}

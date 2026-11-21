@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Tr from "./Tr";
 import { PetPhoto } from "./PetAvatar";
 import { STATUS, areaName, cleanDesc, eventAt, eventVerb, isSample, petTitle } from "@/lib/data";
 import TimeAgo from "./TimeAgo";
@@ -15,11 +16,11 @@ export default function PetCard({ post }) {
         {seen > 0 && post.status !== "home" && <span className="seen">{t("card_seen", { n: seen })}</span>}
       </div>
       <div className="bd">
-        <h3>{petTitle(post)}</h3>
+        <h3><Tr>{petTitle(post)}</Tr></h3>
         <div className="meta">{areaName(post.area)}</div>
         <div className={`when-line ${post.status}`}>{eventVerb(post)} <TimeAgo iso={eventAt(post)} clock /></div>
-        <p className="desc">{cleanDesc(post)}</p>
-        {post.reward && post.status === "lost" && <div className="reward">{t("card_reward", { r: post.reward })}</div>}
+        <p className="desc"><Tr>{cleanDesc(post)}</Tr></p>
+        {post.reward && post.status === "lost" && <div className="reward">{t("card_reward", { r: "" }).trim()} <Tr>{post.reward}</Tr></div>}
       </div>
     </Link>
   );
