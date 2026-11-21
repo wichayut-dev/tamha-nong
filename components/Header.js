@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell } from "./Notifications";
+import { LangSwitch } from "./LangProvider";
+import { t } from "@/lib/i18n";
 
 // โลโก้: ป้ายชื่อห้อยปลอกคอ (สิ่งที่ช่วยให้น้องได้กลับบ้าน)
 // ข้างในเป็นหน้า "ครึ่งแมวครึ่งหมา" หูซ้ายตั้งแบบแมว หูขวาพับแบบหมา
@@ -32,18 +34,19 @@ export default function Header() {
           <Logo />
           <div className="wordmark">
             <h1>ตามหา<em>น้อง</em></h1>
-            <small>ภูเก็ต</small>
+            <small>{t("brand_sub")}</small>
           </div>
         </Link>
         {isAdmin ? (
-          <span className="admin-tag">ผู้ดูแลระบบ</span>
+          <span className="admin-tag">{t("admin_tag")}</span>
         ) : (
-          <nav className="nav" aria-label="เมนูหลัก">
-            <Link href="/" aria-current={cur("/")}>ประกาศ</Link>
-            <Link href="/map" aria-current={cur("/map")}>แผนที่</Link>
-            <Link href="/new" className="cta">+ ลงประกาศ</Link>
+          <nav className="nav" aria-label={t("nav_main")}>
+            <Link href="/" aria-current={cur("/")}>{t("nav_posts")}</Link>
+            <Link href="/map" aria-current={cur("/map")}>{t("nav_map")}</Link>
+            <Link href="/new" className="cta">{t("nav_new")}</Link>
           </nav>
         )}
+        {!isAdmin && <LangSwitch />}
         {!isAdmin && <Bell />}
       </div>
     </header>

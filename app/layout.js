@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import TabBar from "@/components/TabBar";
 import Footer from "@/components/Footer";
 import NotificationsProvider from "@/components/Notifications";
+import LangProvider from "@/components/LangProvider";
 
 const display = Mitr({ subsets: ["thai", "latin"], weight: ["400", "500"], variable: "--font-display" });
 const body = IBM_Plex_Sans_Thai({ subsets: ["thai", "latin"], weight: ["400", "500", "600"], variable: "--font-body" });
@@ -34,12 +35,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="th" className={`${display.variable} ${body.variable}`}>
       <body>
-        <NotificationsProvider>
-          <Header />
-          <main className="wrap">{children}</main>
-          <Footer />
-          <TabBar />
-        </NotificationsProvider>
+        <LangProvider>
+          <NotificationsProvider>
+            <Header />
+            <main className="wrap">{children}</main>
+            <Footer />
+            <TabBar />
+          </NotificationsProvider>
+        </LangProvider>
       </body>
     </html>
   );

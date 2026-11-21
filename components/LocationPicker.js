@@ -4,6 +4,7 @@ import L from "leaflet";
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import { PHUKET_BOUNDS, PHUKET_CENTER, gmapsUrl, inPhuket } from "@/lib/data";
+import { t } from "@/lib/i18n";
 
 const pinIcon = (color) =>
   L.divIcon({
@@ -41,27 +42,27 @@ export default function LocationPicker({ value, onChange, color = "#e0475a", hei
       const m = t.match(re);
       if (m) { pick({ lat: +m[1], lng: +m[2] }); setLink(""); return; }
     }
-    if (/goo\.gl|maps\.app/.test(t)) setGps("ลิงก์แบบย่ออ่านพิกัดไม่ได้ เปิดลิงก์ใน Google Maps แล้วกดค้างที่หมุด คัดลอกพิกัด (เช่น 7.88, 98.39) มาวางแทน");
-    else setGps("ไม่พบพิกัดในข้อความนี้ ลองวางลิงก์จาก Google Maps หรือพิกัดตัวเลข");
+    if (/goo\.gl|maps\.app/.test(t)) setGps(t("loc_short_link"));
+    else setGps(t("loc_no_coords"));
   }
 
   function pick(v) {
-    if (!inPhuket(v.lat, v.lng)) return setGps("ตำแหน่งนี้อยู่นอกภูเก็ต กรุณาปักหมุดในเกาะภูเก็ต");
+    if (!inPhuket(v.lat, v.lng)) return setGps(t("loc_outside"));
     setGps("");
     onChange(v);
   }
 
   function useMyLocation() {
-    if (!navigator.geolocation) return setGps("อุปกรณ์นี้ไม่รองรับการหาตำแหน่ง");
-    setGps("กำลังหาตำแหน่ง…");
+    if (!navigator.geolocation) return setGps(t("loc_unsupported"));
+    setGps(t("loc_finding"));
     navigator.geolocation.getCurrentPosition(
       (p) => {
         pick({ lat: p.coords.latitude, lng: p.coords.longitude });
         // บอกความแม่นยำ: คอมตั้งโต๊ะมักเดาจาก IP คลาดได้หลายกิโลเมตร
         const acc = p.coords.accuracy;
-        if (acc > 300) setGps(`ตำแหน่งนี้อาจคลาดประมาณ ${acc >= 1000 ? (acc / 1000).toFixed(1) + " กม." : Math.round(acc) + " ม."} กรุณาลากหมุดหรือแตะแผนที่ให้ตรงจุดจริง`);
+        if (acc > 300) setGps(t("loc_inaccurate", { d: acc >= 1000 ? t("km", { n: (acc / 1000).toFixed(1) }) : t("m", { n: Math.round(acc) }) }));
       },
-      () => setGps("หาตำแหน่งไม่ได้ กรุณาอนุญาตการเข้าถึงตำแหน่ง หรือแตะบนแผนที่แทน"),
+      () => setGps(t("loc_denied")),
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
@@ -82,20 +83,20 @@ export default function LocationPicker({ value, onChange, color = "#e0475a", hei
       <div className="picker-bar">
         <button type="button" className="btn small primary" onClick={useMyLocation}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="12" cy="12" r="4" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></svg>
-          ใช้ตำแหน่งปัจจุบันของฉัน
+          {t("use_my_loc")}
         </button>
         {value && (
           <a className="btn small gmaps" href={gmapsUrl(value.lat, value.lng)} target="_blank" rel="noopener noreferrer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z" /><circle cx="12" cy="10" r="2.5" /></svg>
-            เช็กจุดนี้ใน Google Maps
+            {t("check_gmaps")}
           </a>
         )}
-        {value && <button type="button" className="btn small ghost" onClick={() => onChange(null)}>ล้างหมุด</button>}
+        {value && <button type="button" className="btn small ghost" onClick={() => onChange(null)}>{t("clear_pin")}</button>}
       </div>
-      <input type="text" className="picker-link" inputMode="url" value={link} placeholder="หรือวางลิงก์ Google Maps / พิกัด เช่น 7.8804, 98.3923"
-        onChange={(e) => fromLink(e.target.value)} aria-label="วางลิงก์ Google Maps หรือพิกัด" />
-      <span className={gps && !gps.startsWith("กำลัง") ? "err" : "hint"}>
-        {gps || (value ? `ปักหมุดแล้ว (${value?.lat.toFixed(5)}, ${value?.lng.toFixed(5)}) ลากหมุดเพื่อขยับได้` : "แตะบนแผนที่ตรงจุดนั้นเพื่อปักหมุด คนที่เห็นประกาศจะกดนำทางด้วย Google Maps ไปที่หมุดได้ทันที")}
+      <input type="text" className="picker-link" inputMode="url" value={link} placeholder={t("paste_ph")}
+        onChange={(e) => fromLink(e.target.value)} aria-label={t("paste_aria")} />
+      <span className={gps && gps !== t("loc_finding") ? "err" : "hint"}>
+        {gps || (value ? t("pinned", { lat: value.lat.toFixed(5), lng: value.lng.toFixed(5) }) : t("tap_to_pin"))}
       </span>
     </div>
   );
