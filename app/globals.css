@@ -1319,3 +1319,4 @@ body { background: var(--bg) !important; }
 /* ใบประกาศ: เห็นรูปเต็มตัวเสมอ ไม่ครอป */
 .fl-photo img { position: absolute; inset: 0; width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: 50% 50% !important; background: #f4f3ef; }
 .fl-photo { background: #f4f3ef; }
+.fl-photo, .fl-photo img { background: #fff !important; }
