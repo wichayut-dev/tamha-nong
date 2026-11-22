@@ -12,6 +12,16 @@ A lost-and-found pet board for Phuket. Post once, instead of copy-pasting into e
 |---|---|---|
 | ![Post a report](docs/new-post-v2.jpg) | ![Map](docs/map-v2.jpg) | ![Poster](docs/poster-v2.jpg) |
 
+## Why I built this
+
+When a pet goes missing in Phuket, the post usually goes into a few Facebook groups and sinks within hours. It has no map pin, nobody can say "I saw it here, at this time", and the owner has to copy-paste the same text everywhere.
+
+I wanted one place that fixes those three things: a pin on the map, a one-tap "I saw this one" report, and a printable poster with a QR code. Decisions worth explaining:
+
+- **No accounts.** Posting should take a minute while you are worried. Each post gets a random edit token that stays in the owner's browser; only its hash is stored.
+- **The browser never writes to tables directly.** Row Level Security blocks it, and every write goes through a database function with rate limits.
+- **Phone alerts without a library.** Web Push encryption (RFC 8291) and VAPID signing (RFC 8292) are written with `node:crypto` and checked against the RFC test vector.
+
 ## Features
 
 - Report a lost or found pet with a photo of the animal and of the place (HEIC photos from iPhone are supported)
