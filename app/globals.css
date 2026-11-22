@@ -1360,3 +1360,9 @@ body { background: var(--bg) !important; }
   background: #d24b3a; box-shadow: inset -3px -3px 0 rgba(0,0,0,.18), 0 3px 4px rgba(0,0,0,.3); }
 @media (prefers-color-scheme: dark) { .board .section-title h2 { color: #f1e6d4; } .board .toolbar .meta { color: #efe2cc; } }
 @media (max-width: 600px) { .board { border-width: 6px; padding: 16px 10px 22px; margin-inline: -6px; } }
+/* v16a: ตัวหนังสือบนบอร์ดต้องเข้มเสมอ ทั้งโหมดสว่างและมืด เพราะปุ่มเป็นพื้นขาว */
+.board .chip { color: #1c2b2f !important; background: rgba(255,255,255,.9) !important; border-color: transparent !important; }
+.board .chip[aria-pressed="true"] { background: #1c2b2f !important; color: #fff !important; }
+.board .live { color: #2b3a2f !important; }
+.board .empty.board-note, .board .empty.board-note * { color: var(--paper-ink); }
+.board .empty.board-note .btn { color: #fff !important; background: #0b7f8a !important; }
