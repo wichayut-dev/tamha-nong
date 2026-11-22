@@ -67,7 +67,7 @@ export default function FeedPage() {
           <p className="hb-stat">
             {!posts ? t("loading") : counts.real
               ? t("hb_stat", { lost: counts.lost, found: counts.found, home: counts.home })
-              : t("hb_none_real")}
+              : t(posts.length ? "hb_none_real" : "hb_none")}
           </p>
           <div className="hb-actions">
             <Link href="/new?type=lost" className="hb-act lost">
