@@ -937,7 +937,7 @@ body { background: var(--bg) !important; }
 :root { --bg:#e6eeeb; --surface2:#eef3f1; --line:#cfdad6;
   --cork:#c8a676; --cork-dot:#a9824f; --cork-lite:#dcc096; --frame:#7a5636; --frame-hi:#9a7048; }
 @media (prefers-color-scheme: dark) {
-  :root { --bg:#0f1719; --cork:#6e5639; --cork-dot:#56422a; --cork-lite:#80664a; --frame:#3b2a1b; --frame-hi:#4f3925; }
+  :root { --bg:#0f1719; --surface2:#1d2a2e; --line:#2a383c; --cork:#6e5639; --cork-dot:#56422a; --cork-lite:#80664a; --frame:#3b2a1b; --frame-hi:#4f3925; }
 }
 .board { position: relative; margin: 8px 0 28px; padding: 22px clamp(14px, 3vw, 28px) 30px; border-radius: 10px;
   background-color: var(--cork);
