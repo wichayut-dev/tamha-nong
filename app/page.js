@@ -71,10 +71,10 @@ export default function FeedPage() {
           </p>
           <div className="hb-actions">
             <Link href="/new?type=lost" className="hb-act lost">
-              <b>{t("cta_lost")}</b><span>{t("hb_lost_d")}</span><i aria-hidden="true">→</i>
+              <b>{t("cta_lost")}</b><span>{t("hb_lost_d")}</span>
             </Link>
             <Link href="/new?type=found" className="hb-act found">
-              <b>{t("cta_found")}</b><span>{t("hb_found_d")}</span><i aria-hidden="true">→</i>
+              <b>{t("cta_found")}</b><span>{t("hb_found_d")}</span>
             </Link>
           </div>
           <div className="search hb-search">
@@ -95,7 +95,6 @@ export default function FeedPage() {
       <section className="board" aria-labelledby="board-title">
       <div className="section-title">
         <h2 id="board-title">{t("latest")}</h2>
-        <span className="live"><i />{t("auto_update")}</span>
       </div>
 
       <div className="toolbar">

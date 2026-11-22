@@ -40,7 +40,7 @@ export default function HeroMap({ posts }) {
         <Marker key={p.id} position={[p.lat, p.lng]} icon={icon(p.status, new Date(p.created_at).getTime() > day)}
           eventHandlers={{ click: () => router.push(`/p/${p.id}`) }}>
           <Tooltip direction="top" offset={[0, -10]} className="hm-tip">
-            <b><Tr>{petTitle(p)}</Tr></b> · {STATUS[p.status]}<br /><small>{areaName(p.area)}</small>
+            <b><Tr>{petTitle(p)}</Tr></b><br />{STATUS[p.status]}<br /><small>{areaName(p.area)}</small>
           </Tooltip>
         </Marker>
       ))}

@@ -25,8 +25,8 @@ export async function generateMetadata({ params }) {
   const name = p.name || kind;
   const area = AREAS[p.area]?.n ?? "";
   const head = p.status === "lost" ? `ตามหา${name}` : p.status === "found" ? `พบ${kind}หลง` : `${name} กลับบ้านแล้ว`;
-  const title = `${head} · ${area}`;
-  const desc = `${STATUS[p.status]} · ${kind} · ${area}${p.reward ? ` · รางวัล ${p.reward}` : ""} — ${(p.description || "").slice(0, 140)}`;
+  const title = `${head}, ${area}`;
+  const desc = `${STATUS[p.status]}, ${kind}, ${area}${p.reward ? `, รางวัล ${p.reward}` : ""} — ${(p.description || "").slice(0, 140)}`;
   const img = p.photo_url && /^https:\/\//.test(p.photo_url) ? p.photo_url : p.photo_url?.startsWith("/samples/") ? p.photo_url : "/icons/icon-512.png";
   return {
     title,

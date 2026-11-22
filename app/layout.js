@@ -14,7 +14,7 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_PROJECT_PRO
 export const metadata = {
   metadataBase: new URL(SITE),
   openGraph: { siteName: "ตามหาน้อง ภูเก็ต", locale: "th_TH", type: "website", images: [{ url: "/icons/icon-512.png", width: 512, height: 512 }] },
-  title: { default: "ตามหาน้อง ภูเก็ต", template: "%s · ตามหาน้อง ภูเก็ต" },
+  title: { default: "ตามหาน้อง ภูเก็ต", template: "%s | ตามหาน้อง ภูเก็ต" },
   description: "รวมประกาศสัตว์เลี้ยงหายและพบในภูเก็ตไว้ที่เดียว พร้อมแผนที่ แจ้งได้ทันทีไม่ต้องสมัครสมาชิก",
   applicationName: "ตามหาน้อง",
   appleWebApp: { capable: true, title: "ตามหาน้อง", statusBarStyle: "default" },

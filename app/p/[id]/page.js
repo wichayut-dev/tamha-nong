@@ -116,7 +116,7 @@ export default function PostPage() {
             {safePhoto(post.place_photo_url) && (
               <figure className="place-photo">
                 <img src={safePhoto(post.place_photo_url)} alt={placeLabel} loading="lazy" />
-                <figcaption>📍 {placeLabel} · {areaName(post.area)}</figcaption>
+                <figcaption>{placeLabel}, {areaName(post.area)}</figcaption>
               </figure>
             )}
             <div className="mini-legend">
@@ -130,7 +130,7 @@ export default function PostPage() {
           <div>
             <h2 className="dname"><Tr>{petTitle(post)}</Tr></h2>
             {isSample(post) && <p className="sample-note">{t("sample_note")}</p>}
-            <div className={`when-line big ${post.status}`}>{eventVerb(post)} <TimeAgo iso={eventAt(post)} clock /> · {areaName(post.area)}</div>
+            <div className={`when-line big meta-row ${post.status}`}><span>{eventVerb(post)} <TimeAgo iso={eventAt(post)} clock /></span><span>{areaName(post.area)}</span></div>
           </div>
 
           <div className="action-row">
@@ -147,7 +147,6 @@ export default function PostPage() {
             <Link href={`/p/${post.id}/poster`} className="poster-cta">
               <span className="pc-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M6 14h12v7H6z"/></svg></span>
               <span><b>{t(post.status === "lost" ? "poster_lost" : "poster_found")}</b><small>{t("poster_sub")}</small></span>
-              <span aria-hidden="true">→</span>
             </Link>
           )}
 
@@ -200,7 +199,7 @@ export default function PostPage() {
           </section>
 
           <section className="panel contact-card">
-            <h3>{t(post.status === "found" ? "contact_finder" : "contact_owner")}{post.contact_name ? ` · ${post.contact_name}` : ""}</h3>
+            <h3>{t(post.status === "found" ? "contact_finder" : "contact_owner")}{post.contact_name ? `: ${post.contact_name}` : ""}</h3>
             <div className="contact-line">
               <a className="phone" href={`tel:${tel}`}>{post.phone}</a>
               <div style={{ display: "flex", gap: 8 }}>
@@ -241,8 +240,8 @@ export default function PostPage() {
                 <div className="sight" key={s.id}>
                   <div>
                     {s.note ? <Tr>{s.note}</Tr> : t("reported_seen")}
-                    <div className="meta">
-                      {t("seen_prefix")} <TimeAgo iso={seenAt(s)} clock /> · {areaName(s.area)} ·{" "}
+                    <div className="meta meta-row">
+                      <span>{t("seen_prefix")} <TimeAgo iso={seenAt(s)} clock /></span><span>{areaName(s.area)}</span>
                       <a href={s.lat ? gmapsUrl(s.lat, s.lng) : gmapsAreaUrl(s.area)} target="_blank" rel="noopener noreferrer" className="inline-link">{s.lat ? t("nav_to_seen") : t("navigate")}</a>
                     </div>
                   </div>

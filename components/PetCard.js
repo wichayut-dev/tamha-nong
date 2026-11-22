@@ -30,7 +30,7 @@ export default function PetCard({ post }) {
         <h3><Tr>{petTitle(post)}</Tr></h3>
         <div className="fl-meta">
           <b>{areaName(post.area)}</b>
-          {eventVerb(post) && <> · {eventVerb(post)} <TimeAgo iso={eventAt(post)} /></>}
+          {eventVerb(post) && <span>{eventVerb(post)} <TimeAgo iso={eventAt(post)} /></span>}
         </div>
         <p className="fl-desc"><Tr>{cleanDesc(post)}</Tr></p>
         {post.reward && post.status === "lost" && <div className="fl-reward">{t("card_reward", { r: "" }).trim()} <Tr>{post.reward}</Tr></div>}

@@ -32,7 +32,7 @@ export default function MapView({ posts }) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={safePhoto(p.photo_url)} alt="" />
               )}
-              <strong><Tr>{petTitle(p)}</Tr> · {STATUS[p.status]}</strong>
+              <strong><Tr>{petTitle(p)}</Tr></strong><span>{STATUS[p.status]}</span>
               <span>{areaName(p.area)}</span>
               <Link href={`/p/${p.id}`}>{t("view_post")}</Link>
               <a href={gmapsUrl(p.lat, p.lng)} target="_blank" rel="noopener noreferrer">{t("nav_gmaps")}</a>

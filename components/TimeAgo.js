@@ -19,7 +19,7 @@ export default function TimeAgo({ iso, clock = false }) {
   useEffect(() => subscribe(() => tick((x) => x + 1)), []);
   return (
     <time dateTime={iso} title={fullDateTime(iso)} suppressHydrationWarning>
-      {clock ? <><b className="clock">{clockTime(iso)}</b> · {timeAgo(iso)}</> : timeAgo(iso)}
+      {clock ? <><b className="clock">{clockTime(iso)}</b> ({timeAgo(iso)})</> : timeAgo(iso)}
     </time>
   );
 }

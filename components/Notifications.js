@@ -59,7 +59,7 @@ export default function NotificationsProvider({ children }) {
         push({
           id: "p-" + p.id, kind: p.status, mine, read: false, href: `/p/${p.id}`, at: p.created_at, post: p,
           tk: mine ? "notif_mine_posted" : p.status === "lost" ? "notif_new_lost" : "notif_new_found",
-          body: `${petTitle(p)} · ${areaName(p.area)}`,
+          body: `${petTitle(p)}, ${areaName(p.area)}`,
         });
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "sightings" }, async ({ new: s }) => {
@@ -70,7 +70,7 @@ export default function NotificationsProvider({ children }) {
         push({
           id: "s-" + s.id, kind: "seen", mine, read: false, href: `/p/${p.id}`, at: s.created_at, post: p,
           tk: mine ? "notif_mine_seen" : "notif_seen",
-          body: `${petTitle(p)} · ${areaName(s.area)}${s.note ? " · " + s.note : ""}`,
+          body: `${petTitle(p)}, ${areaName(s.area)}${s.note ? ", " + s.note : ""}`,
         });
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "posts" }, ({ new: p }) => {
@@ -78,7 +78,7 @@ export default function NotificationsProvider({ children }) {
         push({
           id: "h-" + p.id, kind: "home", mine: !!getToken(p.id), read: false, href: `/p/${p.id}`,
           at: new Date().toISOString(), post: p,
-          tk: "notif_home", body: `${petTitle(p)} · ${areaName(p.area)}`,
+          tk: "notif_home", body: `${petTitle(p)}, ${areaName(p.area)}`,
         });
       })
       .subscribe();
