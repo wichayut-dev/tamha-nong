@@ -92,8 +92,9 @@ export default function FeedPage() {
         </aside>
       </section>
 
+      <section className="board" aria-labelledby="board-title">
       <div className="section-title">
-        <h2>{t("latest")}</h2>
+        <h2 id="board-title">{t("latest")}</h2>
         <span className="live"><i />{t("auto_update")}</span>
       </div>
 
@@ -121,10 +122,11 @@ export default function FeedPage() {
       ) : posts && shown.length ? (
         <div className="grid">{shown.map((p) => <PetCard key={p.id} post={p} />)}</div>
       ) : posts ? (
-        <div className="empty">
+        <div className="empty board-note">
           {posts.length ? <>{t("no_match")}<br />{t("no_match2")}</> : <>{t("no_posts")}<br /><Link href="/new" className="btn warm" style={{ marginTop: 12 }}>{t("first_post")}</Link></>}
         </div>
       ) : null}
+      </section>
     </>
   );
 }
